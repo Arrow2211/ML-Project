@@ -9,6 +9,7 @@ from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional
+from fastapi import BackgroundTasks
 
 from ml.data_fetcher import build_dataset, get_city_list, clear_cache, INDIAN_CITIES
 from ml.preprocessing import preprocess, preprocess_single_input
@@ -42,37 +43,43 @@ state = {
 
 @app.on_event("startup")
 async def startup():
-    """Fetch real data and train model on startup."""
-    print("🚀 Fetching real government data and training model on startup...")
-    print("   Sources: Open-Meteo (ERA5/IMD weather), USGS (earthquakes)")
+    """Start model training in background."""
+    print("🚀 FastAPI server is starting up...")
+    # Wrap in background task to avoid deployment timeout on Render
+    from .ml.data_fetcher import build_dataset
+    from .ml.preprocessing import preprocess
+    from .ml.model import train_model, save_model
     
-    df = build_dataset(start_date="2023-01-01", end_date="2023-12-31", use_cache=True)
-    
-    if df.empty:
-        print("⚠ No data available. Server will start without a trained model.")
-        return
-    
-    state["dataset"] = df
-    
-    X, y, scaler, le, feat_names = preprocess(df, is_training=True)
-    result = train_model(X, y, feat_names)
-    
-    state["model"] = result["model"]
-    state["scaler"] = scaler
-    state["label_encoder"] = le
-    state["feature_names"] = feat_names
-    state["training_result"] = {
-        "accuracy": result["accuracy"],
-        "classification_report": result["classification_report"],
-        "confusion_matrix": result["confusion_matrix"],
-        "feature_importance": result["feature_importance"],
-        "train_samples": result["train_samples"],
-        "test_samples": result["test_samples"],
-    }
-    
-    save_model(result["model"], scaler, le, feat_names)
-    print(f"✅ Model trained on real data — Accuracy: {result['accuracy']:.4f}")
-    print(f"   Dataset: {len(df)} rows across {df['City'].nunique()} cities")
+    # We use a simple background execution for the initial fetch
+    import threading
+    def train_task():
+        print("🌍 Background: Fetching real government data and training model...")
+        df = build_dataset(start_date="2023-01-01", end_date="2023-12-31", use_cache=True)
+        if df.empty:
+            print("⚠ Background: No data available. Server running without trained model.")
+            return
+            
+        state["dataset"] = df
+        X, y, scaler, le, feat_names = preprocess(df, is_training=True)
+        result = train_model(X, y, feat_names)
+        
+        state["model"] = result["model"]
+        state["scaler"] = scaler
+        state["label_encoder"] = le
+        state["feature_names"] = feat_names
+        state["training_result"] = {
+            "accuracy": result["accuracy"],
+            "classification_report": result["classification_report"],
+            "confusion_matrix": result["confusion_matrix"],
+            "feature_importance": result["feature_importance"],
+            "train_samples": result["train_samples"],
+            "test_samples": result["test_samples"],
+        }
+        save_model(result["model"], scaler, le, feat_names)
+        print(f"✅ Background: Model trained — Accuracy: {result['accuracy']:.4f}")
+
+    thread = threading.Thread(target=train_task)
+    thread.start()
 
 
 # ─── Schemas ──────────────────────────────────────────────────────────
