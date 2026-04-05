@@ -45,10 +45,8 @@ state = {
 async def startup():
     """Start model training in background."""
     print("🚀 FastAPI server is starting up...")
-    # Wrap in background task to avoid deployment timeout on Render
-    from .ml.data_fetcher import build_dataset
-    from .ml.preprocessing import preprocess
-    from .ml.model import train_model, save_model
+    # Already imported at top level, no need for redundant re-imports
+    # Using absolute imports at top level avoids the 'relative import' error on Render
     
     # We use a simple background execution for the initial fetch
     import threading
@@ -310,4 +308,7 @@ async def city_risks():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    import os
+    # Render provides a PORT environment variable
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
