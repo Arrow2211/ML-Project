@@ -4,11 +4,11 @@ import { useState, useEffect } from "react";
 import { fetchCities, predictRisk } from "@/lib/api";
 
 const FIELDS = [
-  { name: "temperature", label: "Temperature (°C)", min: -10, max: 55, step: 0.5, default: 32 },
-  { name: "rainfall", label: "Rainfall (mm)", min: 0, max: 600, step: 1, default: 120 },
-  { name: "humidity", label: "Humidity (%)", min: 0, max: 100, step: 1, default: 65 },
-  { name: "wind_speed", label: "Wind Speed (km/h)", min: 0, max: 80, step: 0.5, default: 15 },
-  { name: "earthquake_frequency", label: "Earthquake Frequency", min: 0, max: 30, step: 1, default: 3, isInt: true },
+  { name: "temperature", label: "Temperature (°C)", min: -10, max: 55, step: 0.1, default: 25 },
+  { name: "rainfall", label: "Rainfall (mm)", min: 0, max: 3500, step: 1, default: 700 },
+  { name: "humidity", label: "Humidity (%)", min: 0, max: 100, step: 1, default: 60 },
+  { name: "wind_speed", label: "Wind Speed (km/h)", min: 0, max: 150, step: 0.1, default: 15 },
+  { name: "earthquake_frequency", label: "Earthquake Frequency", min: 0, max: 100, step: 1, default: 5, isInt: true },
   { name: "drought_index", label: "Drought Index (0–1)", min: 0, max: 1, step: 0.01, default: 0.3 },
   { name: "cyclone_risk", label: "Cyclone Risk (0–1)", min: 0, max: 1, step: 0.01, default: 0.2 },
 ];
@@ -22,6 +22,7 @@ export default function PredictionForm({ onResult, onLoading }) {
   const [formData, setFormData] = useState(
     Object.fromEntries(FIELDS.map((f) => [f.name, f.default]))
   );
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchCities()
@@ -55,11 +56,12 @@ export default function PredictionForm({ onResult, onLoading }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(null);
     onLoading(true);
     try {
       const payload = {
         ...formData,
-        city: mode === "city" ? selectedCity : null,
+        city: mode === "city" ? selectedCity : "Custom Location",
       };
       if (mode === "city" && selectedCity) {
         const city = cities.find((c) => c.city === selectedCity);
@@ -72,6 +74,9 @@ export default function PredictionForm({ onResult, onLoading }) {
       onResult(result);
     } catch (err) {
       console.error(err);
+      setError(err.message === "Prediction failed" 
+        ? "Prediction failed. The model might still be training or the backend is busy. Please try again in 1 minute." 
+        : err.message);
     }
     onLoading(false);
   };
@@ -160,6 +165,12 @@ export default function PredictionForm({ onResult, onLoading }) {
                 ))}
             </select>
           </div>
+        </div>
+      )}
+      
+      {error && (
+        <div className="form-error" style={{ padding: "0.8rem", backgroundColor: "#ffefef", color: "#d32f2f", borderRadius: "8px", marginBottom: "1.5rem", border: "1px solid #ffcfcf", fontSize: "0.9rem", display: "flex", gap: "0.5rem", alignItems: "center" }}>
+          <span>⚠️</span> {error}
         </div>
       )}
 

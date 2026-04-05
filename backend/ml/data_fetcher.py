@@ -416,9 +416,12 @@ def assign_risk_label(row):
         score += 0.5
     
     # Final Classification (Balanced for ~167 cities)
-    if score >= 5.0: return "High"
-    elif score >= 2.0: return "Medium"
-    else: return "Low"
+    if score >= 4.5: 
+        return "High"
+    elif score >= 2.2: 
+        return "Medium"
+    else: 
+        return "Low"
 
 
 # ─── Main Dataset Builder ─────────────────────────────────────────────
