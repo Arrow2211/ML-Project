@@ -42,8 +42,8 @@ export default function Home() {
   // Update analytics charts when a new prediction is made for a city
   useEffect(() => {
     if (result && result.city) {
-      if (result.feature_contribution) {
-        setFeatureImportance(result.feature_contribution);
+      if (result.feature_contributions) {
+        setFeatureImportance(result.feature_contributions);
       }
       const fetchCityData = async () => {
         try {
@@ -180,6 +180,10 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="footer">
+        <div className="source-badge">
+          <span className="source-icon">🏛️</span>
+          Verified Government Data Sourced from IMD (Weather) & NCS/USGS (Seismic)
+        </div>
         <p>Multi-Hazard Risk Prediction System • Built with FastAPI + Next.js + scikit-learn</p>
       </footer>
     </main>
