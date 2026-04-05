@@ -28,15 +28,24 @@ def engineer_features(df):
     df = df.copy()
     
     # Interaction: Rainfall × Wind Speed (proxy for storm severity)
+    # Filling NANs to avoid issues
+    df["Rainfall"] = df["Rainfall"].fillna(0)
+    df["Wind_Speed"] = df["Wind_Speed"].fillna(0)
     df["Rainfall_Wind_Interaction"] = (df["Rainfall"] * df["Wind_Speed"]) / 100.0
     
     # Composite hazard index: weighted combination of key risk indicators
+    # We use fixed normalization constants aligned with IMD/USGS scales 
+    # to ensure consistency between training and single-row prediction.
+    max_eq = 25.0
+    max_rain = 500.0
+    max_wind = 150.0
+    
     df["Composite_Hazard_Index"] = (
-        0.3 * df["Cyclone_Risk"] +
-        0.25 * (df["Earthquake_Frequency"] / df["Earthquake_Frequency"].max()) +
-        0.2 * df["Drought_Index"] +
-        0.15 * (df["Rainfall"] / df["Rainfall"].max()) +
-        0.1 * (df["Wind_Speed"] / df["Wind_Speed"].max())
+        0.3 * df.get("Cyclone_Risk", 0).fillna(0) +
+        0.25 * (df.get("Earthquake_Frequency", 0).fillna(0) / max_eq) +
+        0.2 * df.get("Drought_Index", 0).fillna(0) +
+        0.15 * (df.get("Rainfall", 0).fillna(0) / max_rain) +
+        0.1 * (df.get("Wind_Speed", 0).fillna(0) / max_wind)
     )
     
     return df

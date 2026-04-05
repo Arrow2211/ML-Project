@@ -20,9 +20,19 @@ def train_model(X, y, feature_names, test_size=0.2, seed=42):
     Returns:
         dict with model, metrics, feature importances, and train/test data info
     """
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=test_size, random_state=seed, stratify=y
-    )
+    # Check if we have enough samples for stratification
+    min_class_counts = np.unique(y, return_counts=True)[1].min()
+    stratify_data = y if min_class_counts >= 2 else None
+    
+    try:
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=test_size, random_state=seed, stratify=stratify_data
+        )
+    except Exception as e:
+        print(f"  ⚠ Stratified split failed: {e}. Falling back to simple split.")
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=test_size, random_state=seed
+        )
     
     model = RandomForestClassifier(
         n_estimators=200,
