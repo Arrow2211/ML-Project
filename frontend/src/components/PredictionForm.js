@@ -141,6 +141,9 @@ export default function PredictionForm({ onResult, onLoading }) {
                       drought_index: cityData.Drought_Index,
                       cyclone_risk: cityData.Cyclone_Risk,
                     }));
+                  } else {
+                    // Reset to defaults if no data available yet for this city
+                    setFormData(Object.fromEntries(FIELDS.map((f) => [f.name, f.default])));
                   }
                 }
               }}

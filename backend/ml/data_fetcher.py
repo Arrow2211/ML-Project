@@ -186,9 +186,10 @@ INDIAN_CITIES = [
     {"city": "Palus", "state": "Maharashtra", "lat": 17.045, "lon": 74.4366, "zone": "inland_west"}
 ]
 
-# Cache directory
+# Cache files
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
 CACHE_FILE = os.path.join(DATA_DIR, "dataset_cache.csv")
+BASELINE_FILE = os.path.join(DATA_DIR, "baseline_data.csv")
 
 
 # ─── Weather Data (Open-Meteo Historical API) ─────────────────────────
@@ -445,6 +446,14 @@ def build_dataset(start_date="2023-01-01", end_date="2023-12-31", use_cache=True
         df = pd.read_csv(CACHE_FILE)
         if len(df) > 0:
             print(f"  ✅ Loaded {len(df)} rows from cache")
+            return df
+    
+    # Fallback to committed baseline if cache is missing (useful for first deploy on Render)
+    if use_cache and os.path.exists(BASELINE_FILE):
+        print(f"📁 Cache missing. Loading baseline dataset for instant start...")
+        df = pd.read_csv(BASELINE_FILE)
+        if len(df) > 0:
+            print(f"  ✅ Loaded {len(df)} cities from baseline")
             return df
     
     print(f"🌐 Fetching real data from government sources ({start_date} to {end_date})...")

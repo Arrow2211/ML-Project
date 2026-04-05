@@ -16,9 +16,11 @@ build/
 dist/
 
 # Data and Models
-backend/data/
+backend/data/*
+!backend/data/baseline_data.csv
 backend/models/
 *.csv
+!backend/data/baseline_data.csv
 *.joblib
 *.pkl
 
