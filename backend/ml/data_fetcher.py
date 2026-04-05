@@ -366,56 +366,59 @@ def compute_cyclone_risk(wind_speed_series, pressure_series=None):
 # ─── Risk Label Assignment ────────────────────────────────────────────
 
 def assign_risk_label(row):
-    """Assign risk label based on feature thresholds."""
+    """
+    Assign risk label based on ANNUAL climate features.
+    
+    Thresholds adjusted for historical year-round averages:
+    - Rainfall: Annual (Moderate > 1000, High > 2200)
+    - Temperature: Annual Mean (Moderate > 27.5)
+    - Wind: Annual Mean (Moderate > 15)
+    """
     score = 0
     
-    # Rainfall contribution
-    if row["Rainfall"] > 100:
-        score += 3
-    elif row["Rainfall"] > 40:
+    # Rainfall contribution (Annual Totals mm)
+    if row["Rainfall"] > 2500:
+        score += 2.5  
+    elif row["Rainfall"] > 1800:
         score += 1.5
-    
-    # Wind speed contribution
-    if row["Wind_Speed"] > 60:
-        score += 2.5
-    elif row["Wind_Speed"] > 35:
-        score += 1.5
-    elif row["Wind_Speed"] > 20:
+    elif row["Rainfall"] > 1000:
         score += 0.5
+    elif row["Rainfall"] < 300:
+        score += 1.5  # Arid / Drought prone
     
-    # Earthquake frequency contribution
-    if row["Earthquake_Frequency"] > 15:
-        score += 3
-    elif row["Earthquake_Frequency"] > 5:
+    # Wind speed contribution (Annual Mean km/h)
+    if row["Wind_Speed"] > 30:
+        score += 2.5  
+    elif row["Wind_Speed"] > 20:
+        score += 1.0
+    
+    # Earthquake frequency (Yearly Count within 200km)
+    if row["Earthquake_Frequency"] > 30:
+        score += 3.0
+    elif row["Earthquake_Frequency"] > 10:
         score += 1.5
     elif row["Earthquake_Frequency"] > 0:
         score += 0.5
     
-    # Cyclone risk
-    score += row["Cyclone_Risk"] * 4
+    # Cyclone risk index (from wind speed profile)
+    score += row["Cyclone_Risk"] * 3.0
     
-    # Drought index
-    if row["Drought_Index"] > 0.7:
-        score += 2
-    elif row["Drought_Index"] > 0.4:
-        score += 1
-    
-    # Temperature extremes
-    if row["Temperature"] > 42 or row["Temperature"] < 0:
-        score += 1.5
-    elif row["Temperature"] > 38:
+    # Drought index (SPI calculated annually)
+    if row["Drought_Index"] > 0.8:
+        score += 2.0
+    elif row["Drought_Index"] > 0.5:
         score += 0.5
     
-    # Humidity extremes
-    if row["Humidity"] > 90:
-        score += 1
+    # Temperature (Annual Mean Extremes)
+    if row["Temperature"] > 29.5 or row["Temperature"] < 10:
+        score += 2.0  
+    elif row["Temperature"] > 27.5:
+        score += 0.5
     
-    if score >= 6:
-        return "High"
-    elif score >= 3:
-        return "Medium"
-    else:
-        return "Low"
+    # Final Classification (Balanced for ~167 cities)
+    if score >= 5.0: return "High"
+    elif score >= 2.0: return "Medium"
+    else: return "Low"
 
 
 # ─── Main Dataset Builder ─────────────────────────────────────────────
@@ -502,30 +505,42 @@ def build_dataset(start_date="2023-01-01", end_date="2023-12-31", use_cache=True
         # Rate limiting: Open-Meteo recommends <1 req/sec for free tier
         time.sleep(0.3)
     
-    if not all_city_data:
-        print("❌ No data fetched. Returning empty DataFrame.")
-        return pd.DataFrame()
-    
     # Combine all city data
+    if not all_city_data:
+        return pd.DataFrame()
+        
     df = pd.concat(all_city_data, ignore_index=True)
     
-    # Handle any remaining missing values for label assignment
-    df_for_labels = df.copy()
-    for col in ["Temperature", "Rainfall", "Humidity", "Wind_Speed"]:
-        df_for_labels[col] = df_for_labels[col].fillna(df_for_labels[col].median())
+    # ─── Aggregation for Predictions (Annual Stats) ───────────────────
+    # We aggregate the daily weather records into annual summaries.
+    agg_map = {
+        'Temperature': 'mean',
+        'Rainfall': 'sum',
+        'Humidity': 'mean',
+        'Wind_Speed': 'mean',
+        'Latitude': 'first',
+        'Longitude': 'first',
+        'Earthquake_Frequency': 'max',
+        'Drought_Index': 'mean',
+        'Cyclone_Risk': 'mean'
+    }
     
-    # 5. Assign risk labels
-    print("\n🏷️  Assigning risk labels...")
-    df["Risk_Level"] = df_for_labels.apply(assign_risk_label, axis=1)
+    # Group by City to get 1 representative row per city
+    df_agg = df.groupby('City').agg({k: v for k, v in agg_map.items() if k in df.columns}).reset_index()
+    
+    # Assign Risk Labels based on these annual aggregates
+    print("\n🏷️  Assigning risk labels based on annual averages...")
+    df_agg["Risk_Level"] = df_agg.apply(assign_risk_label, axis=1)
     
     # 6. Cache the dataset
-    df.to_csv(CACHE_FILE, index=False)
+    os.makedirs(DATA_DIR, exist_ok=True)
+    df_agg.to_csv(CACHE_FILE, index=False)
     
-    print(f"\n✅ Dataset built: {len(df)} rows across {df['City'].nunique()} cities")
-    print(f"   Risk distribution: {df['Risk_Level'].value_counts().to_dict()}")
+    print(f"\n✅ Dataset built: {len(df_agg)} cities summarized.")
+    print(f"   Risk distribution: {df_agg['Risk_Level'].value_counts().to_dict()}")
     print(f"   Cached to: {CACHE_FILE}")
     
-    return df
+    return df_agg
 
 
 def get_city_list():
