@@ -16,9 +16,9 @@ export async function predictRisk(data) {
   return res.json();
 }
 
-export async function getFeatureImportance() {
-  const res = await fetch(`${API_BASE}/api/feature-importance`);
-  if (!res.ok) throw new Error("Failed to fetch feature importance");
+export async function getClusterStats() {
+  const res = await fetch(`${API_BASE}/api/cluster-stats`);
+  if (!res.ok) throw new Error("Failed to fetch cluster statistics");
   return res.json();
 }
 

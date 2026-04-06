@@ -5,7 +5,7 @@ import { Chart, registerables } from "chart.js";
 
 Chart.register(...registerables);
 
-export default function FeatureImportanceChart({ data, title = "Global Feature Importance" }) {
+export default function FeatureImportanceChart({ data, title = "Hazard Profile" }) {
   const canvasRef = useRef(null);
   const chartRef = useRef(null);
 
@@ -31,7 +31,7 @@ export default function FeatureImportanceChart({ data, title = "Global Feature I
         labels: labels.map((l) => l.replace(/_/g, " ")),
         datasets: [
           {
-            label: "Importance (%)",
+            label: "Hazard Intensity (Normalized)",
             data: values,
             backgroundColor: labels.map((_, i) => colors[i % colors.length] + "cc"),
             borderColor: labels.map((_, i) => colors[i % colors.length]),
@@ -65,7 +65,7 @@ export default function FeatureImportanceChart({ data, title = "Global Feature I
             ticks: { color: "#94a3b8", font: { family: "'Inter', sans-serif" } },
             title: {
               display: true,
-              text: "Importance (%)",
+              text: "Intensity",
               color: "#cbd5e1",
               font: { size: 13, family: "'Inter', sans-serif" },
             },
@@ -93,12 +93,12 @@ export default function FeatureImportanceChart({ data, title = "Global Feature I
     <div className="chart-card">
       <h3>📈 {title}</h3>
       <p className="chart-subtitle">
-        {title.includes("Global") 
-          ? "How much each feature generally affects the model's decisions." 
-          : `Main factors that influenced the risk for ${title.split(" ")[0]}.`}
+        {title.includes("Cluster") 
+          ? "Hazard characteristics that define the profile of this risk group." 
+          : `Specific hazard factors contributing to the risk in this location.`}
       </p>
       <div className="chart-container" style={{ height: "380px" }}>
-        <canvas ref={canvasRef} id="feature-importance-chart" />
+        <canvas ref={canvasRef} id="hazard-profile-chart" />
       </div>
     </div>
   );

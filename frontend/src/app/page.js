@@ -6,12 +6,12 @@ import RiskResult from "@/components/RiskResult";
 import FeatureImportanceChart from "@/components/FeatureImportanceChart";
 import RiskDistributionChart from "@/components/RiskDistributionChart";
 import IndiaMap from "@/components/IndiaMap";
-import { getFeatureImportance, getRiskDistribution, getModelInfo, healthCheck } from "@/lib/api";
+import { getClusterStats, getRiskDistribution, getModelInfo, healthCheck } from "@/lib/api";
 
 export default function Home() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [featureImportance, setFeatureImportance] = useState(null);
+  const [clusterStats, setClusterStats] = useState(null);
   const [riskDistribution, setRiskDistribution] = useState(null);
   const [modelInfo, setModelInfo] = useState(null);
   const [backendReady, setBackendReady] = useState(false);
@@ -23,12 +23,12 @@ export default function Home() {
       setBackendReady(healthy);
       if (healthy) {
         try {
-          const [fi, rd, mi] = await Promise.all([
-            getFeatureImportance(),
+          const [cs, rd, mi] = await Promise.all([
+            getClusterStats(),
             getRiskDistribution(),
             getModelInfo(),
           ]);
-          setFeatureImportance(fi.feature_importance);
+          setClusterStats(cs.cluster_stats);
           setRiskDistribution(rd.distribution);
           setModelInfo(mi);
         } catch (e) {
@@ -84,8 +84,8 @@ export default function Home() {
           {modelInfo && (
             <div className="stats-row">
               <div className="stat-chip">
-                <span className="stat-value">{(modelInfo.accuracy * 100).toFixed(1)}%</span>
-                <span className="stat-label">Model Accuracy</span>
+                <span className="stat-value">{(modelInfo.silhouette_score * 100).toFixed(1)}%</span>
+                <span className="stat-label">Silhouette Score</span>
               </div>
               <div className="stat-chip">
                 <span className="stat-value">{modelInfo.train_samples + modelInfo.test_samples}</span>
@@ -160,8 +160,8 @@ export default function Home() {
           <section className="analytics-section">
             <div className="charts-grid">
               <FeatureImportanceChart 
-                data={featureImportance} 
-                title={result?.city && result.city !== "Custom Location" ? `${result.city} Feature Priority` : "Global Feature Importance"}
+                data={result?.feature_contributions || (clusterStats ? clusterStats["High"] : null)} 
+                title={result?.city && result.city !== "Custom Location" ? `${result.city} Hazard Profile` : "High-Risk Cluster Profile"}
               />
               <RiskDistributionChart 
                 data={riskDistribution} 
