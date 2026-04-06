@@ -1,3 +1,0 @@
-    {"city": "Jat", "state": "Maharashtra", "lat": 17.0719, "lon": 75.3331, "zone": "inland_west"},
-    {"city": "Islampur", "state": "Maharashtra", "lat": 21.0396, "lon": 76.4052, "zone": "inland_west"},
-    {"city": "Palus", "state": "Maharashtra", "lat": 17.045, "lon": 74.4366, "zone": "inland_west"},

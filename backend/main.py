@@ -13,7 +13,7 @@ from fastapi import BackgroundTasks
 
 from ml.data_fetcher import build_dataset, get_city_list, clear_cache, INDIAN_CITIES
 from ml.preprocessing import preprocess, preprocess_single_input
-from ml.model import train_model, predict_risk, get_feature_importance, save_model, load_model
+from ml.model import train_model, predict_risk, get_cluster_stats, save_model, load_model
 
 app = FastAPI(
     title="Multi-Hazard Risk Prediction System",
@@ -34,10 +34,11 @@ app.add_middleware(
 state = {
     "model": None,
     "scaler": None,
-    "label_encoder": None,
+    "cluster_mapping": None,
     "feature_names": None,
     "dataset": None,
     "training_result": None,
+    "training_error": None,
 }
 
 
@@ -52,29 +53,36 @@ async def startup():
     import threading
     def train_task():
         print("🌍 Background: Fetching real government data and training model...")
-        df = build_dataset(start_date="2023-01-01", end_date="2023-12-31", use_cache=True)
-        if df.empty:
-            print("⚠ Background: No data available. Server running without trained model.")
-            return
+        try:
+            df = build_dataset(start_date="2023-01-01", end_date="2023-12-31", use_cache=True)
+            if df.empty:
+                state["training_error"] = "No data available"
+                print("⚠ Background: No data available. Server running without trained model.")
+                return
+                
+            state["dataset"] = df
+            X, y, scaler, cm, feat_names = preprocess(df, is_training=True)
+            result = train_model(X, y, feat_names)
             
-        state["dataset"] = df
-        X, y, scaler, le, feat_names = preprocess(df, is_training=True)
-        result = train_model(X, y, feat_names)
-        
-        state["model"] = result["model"]
-        state["scaler"] = scaler
-        state["label_encoder"] = le
-        state["feature_names"] = feat_names
-        state["training_result"] = {
-            "accuracy": result["accuracy"],
-            "classification_report": result["classification_report"],
-            "confusion_matrix": result["confusion_matrix"],
-            "feature_importance": result["feature_importance"],
-            "train_samples": result["train_samples"],
-            "test_samples": result["test_samples"],
-        }
-        save_model(result["model"], scaler, le, feat_names)
-        print(f"✅ Background: Model trained — Accuracy: {result['accuracy']:.4f}")
+            if "error" in result:
+                state["training_error"] = result["error"]
+                return
+
+            state["model"] = result["model"]
+            state["scaler"] = scaler
+            state["cluster_mapping"] = result["cluster_mapping"]
+            state["feature_names"] = feat_names
+            state["training_result"] = {
+                "silhouette_score": result["silhouette_score"],
+                "cluster_mapping": result["cluster_mapping"],
+                "train_samples": result["train_samples"],
+                "cluster_stats": get_cluster_stats(result["model"], result["cluster_mapping"], feat_names)
+            }
+            save_model(result["model"], scaler, result["cluster_mapping"], feat_names)
+            print(f"✅ Background: Model trained — Silhouette: {result['silhouette_score']:.4f}")
+        except Exception as e:
+            state["training_error"] = str(e)
+            print(f"❌ Background training failed: {e}")
 
     thread = threading.Thread(target=train_task)
     thread.start()
@@ -105,7 +113,11 @@ class FetchDataRequest(BaseModel):
 
 @app.get("/api/health")
 async def health():
-    return {"status": "ok", "model_ready": state["model"] is not None}
+    return {
+        "status": "ok", 
+        "model_ready": state["model"] is not None,
+        "error": state["training_error"]
+    }
 
 
 @app.get("/api/cities")
@@ -187,30 +199,30 @@ async def train():
         raise HTTPException(status_code=400, detail="No dataset loaded. Generate or upload data first.")
     
     df = state["dataset"]
-    X, y, scaler, le, feat_names = preprocess(df, is_training=True)
+    X, y, scaler, cm, feat_names = preprocess(df, is_training=True)
     result = train_model(X, y, feat_names)
     
+    if "error" in result:
+        raise HTTPException(status_code=500, detail=result["error"])
+
     state["model"] = result["model"]
     state["scaler"] = scaler
-    state["label_encoder"] = le
+    state["cluster_mapping"] = result["cluster_mapping"]
     state["feature_names"] = feat_names
     state["training_result"] = {
-        "accuracy": result["accuracy"],
-        "classification_report": result["classification_report"],
-        "confusion_matrix": result["confusion_matrix"],
-        "feature_importance": result["feature_importance"],
+        "silhouette_score": result["silhouette_score"],
+        "cluster_mapping": result["cluster_mapping"],
         "train_samples": result["train_samples"],
-        "test_samples": result["test_samples"],
+        "cluster_stats": get_cluster_stats(result["model"], result["cluster_mapping"], feat_names)
     }
     
-    save_model(result["model"], scaler, le, feat_names)
+    save_model(result["model"], scaler, result["cluster_mapping"], feat_names)
     
     return {
-        "message": "Model trained successfully",
-        "accuracy": result["accuracy"],
-        "feature_importance": result["feature_importance"],
+        "message": "Unsupervised K-Means model trained successfully",
+        "silhouette_score": result["silhouette_score"],
+        "cluster_mapping": result["cluster_mapping"],
         "train_samples": result["train_samples"],
-        "test_samples": result["test_samples"],
     }
 
 
@@ -241,7 +253,7 @@ async def predict(input_data: PredictionInput):
             features["Longitude"] = city_match["lon"]
     
     X_scaled, feat_names = preprocess_single_input(features, state["scaler"])
-    result = predict_risk(state["model"], state["label_encoder"], X_scaled, feat_names)
+    result = predict_risk(state["model"], state["cluster_mapping"], X_scaled, feat_names)
     
     return {
         "city": input_data.city or "Custom Location",
@@ -249,14 +261,14 @@ async def predict(input_data: PredictionInput):
     }
 
 
-@app.get("/api/feature-importance")
-async def feature_importance():
-    """Get global feature importance from trained model."""
+@app.get("/api/cluster-stats")
+async def cluster_stats():
+    """Get statistics for each discovered cluster."""
     if state["model"] is None:
         raise HTTPException(status_code=400, detail="Model not trained yet")
     
-    importance = get_feature_importance(state["model"], state["feature_names"])
-    return {"feature_importance": importance}
+    stats = get_cluster_stats(state["model"], state["cluster_mapping"], state["feature_names"])
+    return {"cluster_stats": stats}
 
 
 @app.get("/api/model-info")

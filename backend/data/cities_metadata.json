@@ -1,0 +1,2109 @@
+[
+    {
+        "city": "Port Blair",
+        "lat": 11.6234,
+        "lon": 92.7265,
+        "state": "Andaman & Nicobar Islands",
+        "zone": "island"
+    },
+    {
+        "city": "Anantapur",
+        "state": "Andhra Pradesh",
+        "lat": 14.6783,
+        "lon": 77.6065,
+        "zone": "coastal_east"
+    },
+    {
+        "city": "Kadapa",
+        "state": "Andhra Pradesh",
+        "lat": 14.4753,
+        "lon": 78.8217,
+        "zone": "coastal_east"
+    },
+    {
+        "city": "Kakinada",
+        "state": "Andhra Pradesh",
+        "lat": 16.9437,
+        "lon": 82.2351,
+        "zone": "coastal_east"
+    },
+    {
+        "city": "Kurnool",
+        "state": "Andhra Pradesh",
+        "lat": 15.8309,
+        "lon": 78.0425,
+        "zone": "coastal_east"
+    },
+    {
+        "city": "Nellore",
+        "state": "Andhra Pradesh",
+        "lat": 14.4494,
+        "lon": 79.9874,
+        "zone": "coastal_east"
+    },
+    {
+        "city": "Rajahmundry",
+        "state": "Andhra Pradesh",
+        "lat": 17.005,
+        "lon": 81.7805,
+        "zone": "coastal_east"
+    },
+    {
+        "city": "Tirupati",
+        "state": "Andhra Pradesh",
+        "lat": 13.6316,
+        "lon": 79.4232,
+        "zone": "coastal_east"
+    },
+    {
+        "city": "Vijayawada",
+        "lat": 16.5062,
+        "lon": 80.648,
+        "state": "Andhra Pradesh",
+        "zone": "coastal_east"
+    },
+    {
+        "city": "Visakhapatnam",
+        "lat": 17.6868,
+        "lon": 83.2185,
+        "state": "Andhra Pradesh",
+        "zone": "coastal_east"
+    },
+    {
+        "city": "Itanagar",
+        "state": "Arunachal Pradesh",
+        "lat": 27.098,
+        "lon": 93.6237,
+        "zone": "inland_northeast"
+    },
+    {
+        "city": "Pasighat",
+        "state": "Arunachal Pradesh",
+        "lat": 28.059,
+        "lon": 95.3325,
+        "zone": "inland_northeast"
+    },
+    {
+        "city": "Tawang",
+        "state": "Arunachal Pradesh",
+        "lat": 27.5879,
+        "lon": 91.8637,
+        "zone": "inland_northeast"
+    },
+    {
+        "city": "Ziro",
+        "state": "Arunachal Pradesh",
+        "lat": 27.5387,
+        "lon": 93.8154,
+        "zone": "inland_northeast"
+    },
+    {
+        "city": "Bongaigaon",
+        "state": "Assam",
+        "lat": 26.48,
+        "lon": 90.558,
+        "zone": "inland_northeast"
+    },
+    {
+        "city": "Dibrugarh",
+        "lat": 27.4728,
+        "lon": 94.912,
+        "state": "Assam",
+        "zone": "inland_northeast"
+    },
+    {
+        "city": "Guwahati",
+        "lat": 26.1445,
+        "lon": 91.7362,
+        "state": "Assam",
+        "zone": "inland_northeast"
+    },
+    {
+        "city": "Jorhat",
+        "state": "Assam",
+        "lat": 26.7578,
+        "lon": 94.208,
+        "zone": "inland_northeast"
+    },
+    {
+        "city": "Nagaon",
+        "state": "Assam",
+        "lat": 26.3314,
+        "lon": 92.7525,
+        "zone": "inland_northeast"
+    },
+    {
+        "city": "Silchar",
+        "lat": 24.8333,
+        "lon": 92.7789,
+        "state": "Assam",
+        "zone": "inland_northeast"
+    },
+    {
+        "city": "Tezpur",
+        "state": "Assam",
+        "lat": 26.617,
+        "lon": 92.765,
+        "zone": "inland_northeast"
+    },
+    {
+        "city": "Tinsukia",
+        "state": "Assam",
+        "lat": 27.488,
+        "lon": 95.3602,
+        "zone": "inland_northeast"
+    },
+    {
+        "city": "Arrah",
+        "state": "Bihar",
+        "lat": 25.5603,
+        "lon": 84.6632,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Begusarai",
+        "state": "Bihar",
+        "lat": 25.5125,
+        "lon": 86.0883,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Bhagalpur",
+        "state": "Bihar",
+        "lat": 25.2861,
+        "lon": 87.1304,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Darbhanga",
+        "state": "Bihar",
+        "lat": 26.083,
+        "lon": 86.0325,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Gaya",
+        "state": "Bihar",
+        "lat": 24.7964,
+        "lon": 85.008,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Muzaffarpur",
+        "state": "Bihar",
+        "lat": 26.1483,
+        "lon": 85.3316,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Patna",
+        "lat": 25.6093,
+        "lon": 85.1376,
+        "state": "Bihar",
+        "zone": "inland_north"
+    },
+    {
+        "city": "Purnia",
+        "state": "Bihar",
+        "lat": 25.7759,
+        "lon": 87.4088,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Chandigarh",
+        "lat": 30.7333,
+        "lon": 76.7794,
+        "state": "Chandigarh",
+        "zone": "inland_north"
+    },
+    {
+        "city": "Ambikapur",
+        "state": "Chhattisgarh",
+        "lat": 23.1226,
+        "lon": 83.1982,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Bhilai",
+        "state": "Chhattisgarh",
+        "lat": 21.2121,
+        "lon": 81.3733,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Bilaspur",
+        "state": "Chhattisgarh",
+        "lat": 22.1638,
+        "lon": 82.1366,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Durg",
+        "state": "Chhattisgarh",
+        "lat": 21.1983,
+        "lon": 81.4008,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Korba",
+        "state": "Chhattisgarh",
+        "lat": 22.5198,
+        "lon": 82.635,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Raigarh",
+        "state": "Chhattisgarh",
+        "lat": 22.2362,
+        "lon": 83.353,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Raipur",
+        "lat": 21.2514,
+        "lon": 81.6296,
+        "state": "Chhattisgarh",
+        "zone": "inland_central"
+    },
+    {
+        "city": "Delhi",
+        "lat": 28.6139,
+        "lon": 77.209,
+        "state": "Delhi",
+        "zone": "inland_north"
+    },
+    {
+        "city": "Goa",
+        "lat": 15.2993,
+        "lon": 74.124,
+        "state": "Goa",
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Mapusa",
+        "state": "Goa",
+        "lat": 15.5909,
+        "lon": 73.8102,
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Margao",
+        "state": "Goa",
+        "lat": 15.2729,
+        "lon": 73.9583,
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Panaji",
+        "state": "Goa",
+        "lat": 15.499,
+        "lon": 73.8282,
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Ponda",
+        "state": "Goa",
+        "lat": 15.4036,
+        "lon": 74.0102,
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Vasco da Gama",
+        "state": "Goa",
+        "lat": 15.3984,
+        "lon": 73.8129,
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Ahmedabad",
+        "lat": 23.0225,
+        "lon": 72.5714,
+        "state": "Gujarat",
+        "zone": "inland_west"
+    },
+    {
+        "city": "Anand",
+        "state": "Gujarat",
+        "lat": 22.5587,
+        "lon": 72.9627,
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Bharuch",
+        "state": "Gujarat",
+        "lat": 21.708,
+        "lon": 72.9957,
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Bhavnagar",
+        "state": "Gujarat",
+        "lat": 21.7719,
+        "lon": 72.1416,
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Gandhinagar",
+        "state": "Gujarat",
+        "lat": 23.2233,
+        "lon": 72.6492,
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Jamnagar",
+        "state": "Gujarat",
+        "lat": 22.4732,
+        "lon": 70.0552,
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Junagadh",
+        "state": "Gujarat",
+        "lat": 21.522,
+        "lon": 70.4582,
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Morbi",
+        "state": "Gujarat",
+        "lat": 22.8004,
+        "lon": 70.8862,
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Navsari",
+        "state": "Gujarat",
+        "lat": 20.9524,
+        "lon": 72.9324,
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Rajkot",
+        "lat": 22.3039,
+        "lon": 70.8022,
+        "state": "Gujarat",
+        "zone": "inland_west"
+    },
+    {
+        "city": "Surat",
+        "lat": 21.1702,
+        "lon": 72.8311,
+        "state": "Gujarat",
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Vadodara",
+        "lat": 22.3072,
+        "lon": 73.1812,
+        "state": "Gujarat",
+        "zone": "inland_west"
+    },
+    {
+        "city": "Ambala",
+        "state": "Haryana",
+        "lat": 30.3844,
+        "lon": 76.7704,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Faridabad",
+        "state": "Haryana",
+        "lat": 28.4031,
+        "lon": 77.3106,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Gurugram",
+        "state": "Haryana",
+        "lat": 28.4646,
+        "lon": 77.0299,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Hisar",
+        "state": "Haryana",
+        "lat": 29.2397,
+        "lon": 75.8175,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Karnal",
+        "state": "Haryana",
+        "lat": 29.7256,
+        "lon": 76.9107,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Panipat",
+        "state": "Haryana",
+        "lat": 29.3913,
+        "lon": 76.9772,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Rohtak",
+        "state": "Haryana",
+        "lat": 28.9011,
+        "lon": 76.5802,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Yamunanagar",
+        "state": "Haryana",
+        "lat": 30.1231,
+        "lon": 77.2863,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Bilaspur",
+        "state": "Himachal Pradesh",
+        "lat": 31.3381,
+        "lon": 76.7612,
+        "zone": "himalayan"
+    },
+    {
+        "city": "Chamba",
+        "state": "Himachal Pradesh",
+        "lat": 32.6923,
+        "lon": 76.1632,
+        "zone": "himalayan"
+    },
+    {
+        "city": "Dalhousie",
+        "state": "Himachal Pradesh",
+        "lat": 32.5436,
+        "lon": 75.9448,
+        "zone": "himalayan"
+    },
+    {
+        "city": "Dharamshala",
+        "lat": 32.219,
+        "lon": 76.3234,
+        "state": "Himachal Pradesh",
+        "zone": "himalayan"
+    },
+    {
+        "city": "Kullu",
+        "state": "Himachal Pradesh",
+        "lat": 31.9579,
+        "lon": 77.1089,
+        "zone": "himalayan"
+    },
+    {
+        "city": "Mandi",
+        "state": "Himachal Pradesh",
+        "lat": 31.6517,
+        "lon": 77.0093,
+        "zone": "himalayan"
+    },
+    {
+        "city": "Shimla",
+        "lat": 31.1048,
+        "lon": 77.1734,
+        "state": "Himachal Pradesh",
+        "zone": "himalayan"
+    },
+    {
+        "city": "Solan",
+        "state": "Himachal Pradesh",
+        "lat": 30.9078,
+        "lon": 77.1024,
+        "zone": "himalayan"
+    },
+    {
+        "city": "Jammu",
+        "lat": 32.7266,
+        "lon": 74.857,
+        "state": "Jammu & Kashmir",
+        "zone": "himalayan"
+    },
+    {
+        "city": "Srinagar",
+        "lat": 34.0837,
+        "lon": 74.7973,
+        "state": "Jammu & Kashmir",
+        "zone": "himalayan"
+    },
+    {
+        "city": "Bokaro",
+        "state": "Jharkhand",
+        "lat": 23.6991,
+        "lon": 85.9911,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Deoghar",
+        "state": "Jharkhand",
+        "lat": 24.4898,
+        "lon": 86.699,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Dhanbad",
+        "state": "Jharkhand",
+        "lat": 23.7953,
+        "lon": 86.431,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Giridih",
+        "state": "Jharkhand",
+        "lat": 24.3315,
+        "lon": 86.1548,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Hazaribagh",
+        "state": "Jharkhand",
+        "lat": 24.0867,
+        "lon": 85.4912,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Jamshedpur",
+        "state": "Jharkhand",
+        "lat": 22.8015,
+        "lon": 86.203,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Ranchi",
+        "lat": 23.3441,
+        "lon": 85.3096,
+        "state": "Jharkhand",
+        "zone": "inland_central"
+    },
+    {
+        "city": "Bangalore",
+        "lat": 12.9716,
+        "lon": 77.5946,
+        "state": "Karnataka",
+        "zone": "inland_south"
+    },
+    {
+        "city": "Belagavi",
+        "lat": 15.8497,
+        "lon": 74.4977,
+        "state": "Karnataka",
+        "zone": "inland_south"
+    },
+    {
+        "city": "Bellary",
+        "state": "Karnataka",
+        "lat": 15.143,
+        "lon": 76.9173,
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Bijapur",
+        "state": "Karnataka",
+        "lat": 16.827,
+        "lon": 75.7175,
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Davanagere",
+        "lat": 14.4644,
+        "lon": 75.9218,
+        "state": "Karnataka",
+        "zone": "inland_south"
+    },
+    {
+        "city": "Hubli",
+        "lat": 15.3647,
+        "lon": 75.124,
+        "state": "Karnataka",
+        "zone": "inland_south"
+    },
+    {
+        "city": "Mangalore",
+        "lat": 12.9141,
+        "lon": 74.856,
+        "state": "Karnataka",
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Mysore",
+        "lat": 12.2958,
+        "lon": 76.6394,
+        "state": "Karnataka",
+        "zone": "inland_south"
+    },
+    {
+        "city": "Shivamogga",
+        "state": "Karnataka",
+        "lat": 13.9326,
+        "lon": 75.575,
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Tumkur",
+        "state": "Karnataka",
+        "lat": 13.3401,
+        "lon": 77.1006,
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Alappuzha",
+        "state": "Kerala",
+        "lat": 9.5003,
+        "lon": 76.4123,
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Kannur",
+        "state": "Kerala",
+        "lat": 11.8764,
+        "lon": 75.3738,
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Kochi",
+        "lat": 9.9312,
+        "lon": 76.2673,
+        "state": "Kerala",
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Kollam",
+        "lat": 8.8932,
+        "lon": 76.6141,
+        "state": "Kerala",
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Kottayam",
+        "state": "Kerala",
+        "lat": 9.6287,
+        "lon": 76.6455,
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Kozhikode",
+        "lat": 11.2588,
+        "lon": 75.7804,
+        "state": "Kerala",
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Manjeri",
+        "state": "Kerala",
+        "lat": 11.1202,
+        "lon": 76.1198,
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Palakkad",
+        "state": "Kerala",
+        "lat": 10.7874,
+        "lon": 76.4742,
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Ponnani",
+        "state": "Kerala",
+        "lat": 10.7801,
+        "lon": 75.9189,
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Thalassery",
+        "state": "Kerala",
+        "lat": 11.7539,
+        "lon": 75.4923,
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Thiruvananthapuram",
+        "lat": 8.5241,
+        "lon": 76.9366,
+        "state": "Kerala",
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Thrissur",
+        "lat": 10.5276,
+        "lon": 76.2144,
+        "state": "Kerala",
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Kargil",
+        "lat": 34.5539,
+        "lon": 76.1349,
+        "state": "Ladakh",
+        "zone": "himalayan"
+    },
+    {
+        "city": "Leh",
+        "lat": 34.1526,
+        "lon": 77.5771,
+        "state": "Ladakh",
+        "zone": "himalayan"
+    },
+    {
+        "city": "Bhopal",
+        "lat": 23.2599,
+        "lon": 77.4126,
+        "state": "Madhya Pradesh",
+        "zone": "inland_central"
+    },
+    {
+        "city": "Dewas",
+        "state": "Madhya Pradesh",
+        "lat": 22.8057,
+        "lon": 76.294,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Gwalior",
+        "lat": 26.2183,
+        "lon": 78.1828,
+        "state": "Madhya Pradesh",
+        "zone": "inland_central"
+    },
+    {
+        "city": "Indore",
+        "lat": 22.7196,
+        "lon": 75.8577,
+        "state": "Madhya Pradesh",
+        "zone": "inland_central"
+    },
+    {
+        "city": "Jabalpur",
+        "lat": 23.1815,
+        "lon": 79.9864,
+        "state": "Madhya Pradesh",
+        "zone": "inland_central"
+    },
+    {
+        "city": "Murwara",
+        "state": "Madhya Pradesh",
+        "lat": 23.834,
+        "lon": 80.3925,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Ratlam",
+        "state": "Madhya Pradesh",
+        "lat": 23.5022,
+        "lon": 74.9552,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Rewa",
+        "lat": 24.5373,
+        "lon": 81.3042,
+        "state": "Madhya Pradesh",
+        "zone": "inland_central"
+    },
+    {
+        "city": "Sagar",
+        "lat": 23.8322,
+        "lon": 78.7378,
+        "state": "Madhya Pradesh",
+        "zone": "inland_central"
+    },
+    {
+        "city": "Satna",
+        "state": "Madhya Pradesh",
+        "lat": 24.6954,
+        "lon": 80.777,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Singrauli",
+        "state": "Madhya Pradesh",
+        "lat": 24.2431,
+        "lon": 82.3828,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Ujjain",
+        "lat": 23.1765,
+        "lon": 75.7885,
+        "state": "Madhya Pradesh",
+        "zone": "inland_central"
+    },
+    {
+        "city": "Ahmednagar",
+        "lat": 19.1628,
+        "lon": 74.858,
+        "state": "Maharashtra",
+        "zone": "inland_west"
+    },
+    {
+        "city": "Akola",
+        "lat": 20.7618,
+        "lon": 77.1921,
+        "state": "Maharashtra",
+        "zone": "inland_central"
+    },
+    {
+        "city": "Alibaug",
+        "state": "Maharashtra",
+        "lat": 18.6498,
+        "lon": 72.8765,
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Amalner",
+        "state": "Maharashtra",
+        "lat": 21.0493,
+        "lon": 75.0573,
+        "zone": "inland_west"
+    },
+    {
+        "city": "Ambajogai",
+        "state": "Maharashtra",
+        "lat": 18.7318,
+        "lon": 76.3855,
+        "zone": "inland_west"
+    },
+    {
+        "city": "Amravati",
+        "lat": 21.1545,
+        "lon": 77.6443,
+        "state": "Maharashtra",
+        "zone": "inland_central"
+    },
+    {
+        "city": "Aurangabad",
+        "lat": 19.8762,
+        "lon": 75.3433,
+        "state": "Maharashtra",
+        "zone": "inland_west"
+    },
+    {
+        "city": "Ausa",
+        "state": "Maharashtra",
+        "lat": 18.251,
+        "lon": 76.501,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Baramati",
+        "lat": 18.2199,
+        "lon": 74.4534,
+        "state": "Maharashtra",
+        "zone": "inland_west"
+    },
+    {
+        "city": "Beed",
+        "lat": 18.9918,
+        "lon": 75.9098,
+        "state": "Maharashtra",
+        "zone": "inland_west"
+    },
+    {
+        "city": "Bhandara",
+        "lat": 21.1226,
+        "lon": 79.7945,
+        "state": "Maharashtra",
+        "zone": "inland_central"
+    },
+    {
+        "city": "Bhiwandi",
+        "lat": 19.3026,
+        "lon": 73.0588,
+        "state": "Maharashtra",
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Bhusawal",
+        "state": "Maharashtra",
+        "lat": 21.0457,
+        "lon": 75.7808,
+        "zone": "inland_west"
+    },
+    {
+        "city": "Buldhana",
+        "lat": 20.5628,
+        "lon": 76.4087,
+        "state": "Maharashtra",
+        "zone": "inland_central"
+    },
+    {
+        "city": "Chandrapur",
+        "lat": 20.0968,
+        "lon": 79.5045,
+        "state": "Maharashtra",
+        "zone": "inland_central"
+    },
+    {
+        "city": "Chhatrapati Sambhajinagar",
+        "lat": 19.8773,
+        "lon": 75.339,
+        "state": "Maharashtra",
+        "zone": "inland_west"
+    },
+    {
+        "city": "Chiplun",
+        "lat": 17.5253,
+        "lon": 73.5156,
+        "state": "Maharashtra",
+        "zone": "inland_west"
+    },
+    {
+        "city": "Dahanu",
+        "state": "Maharashtra",
+        "lat": 19.9887,
+        "lon": 72.7338,
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Dapoli",
+        "state": "Maharashtra",
+        "lat": 17.758,
+        "lon": 73.1887,
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Dharashiv",
+        "lat": 18.1698,
+        "lon": 76.118,
+        "state": "Maharashtra",
+        "zone": "inland_central"
+    },
+    {
+        "city": "Dhule",
+        "lat": 21.1305,
+        "lon": 74.4901,
+        "state": "Maharashtra",
+        "zone": "inland_west"
+    },
+    {
+        "city": "Gadchiroli",
+        "lat": 19.7591,
+        "lon": 80.1623,
+        "state": "Maharashtra",
+        "zone": "inland_central"
+    },
+    {
+        "city": "Gondia",
+        "lat": 21.4552,
+        "lon": 80.1963,
+        "state": "Maharashtra",
+        "zone": "inland_central"
+    },
+    {
+        "city": "Guhagar",
+        "state": "Maharashtra",
+        "lat": 17.4838,
+        "lon": 73.1911,
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Hingoli",
+        "lat": 19.5431,
+        "lon": 77.1739,
+        "state": "Maharashtra",
+        "zone": "inland_central"
+    },
+    {
+        "city": "Ichalkaranji",
+        "lat": 16.6959,
+        "lon": 74.4556,
+        "state": "Maharashtra",
+        "zone": "inland_west"
+    },
+    {
+        "city": "Igatpuri",
+        "state": "Maharashtra",
+        "lat": 19.6944,
+        "lon": 73.5639,
+        "zone": "inland_west"
+    },
+    {
+        "city": "Islampur",
+        "state": "Maharashtra",
+        "lat": 21.0396,
+        "lon": 76.4052,
+        "zone": "inland_west"
+    },
+    {
+        "city": "Jalgaon",
+        "lat": 20.8429,
+        "lon": 75.5261,
+        "state": "Maharashtra",
+        "zone": "inland_west"
+    },
+    {
+        "city": "Jalna",
+        "lat": 19.9188,
+        "lon": 75.8709,
+        "state": "Maharashtra",
+        "zone": "inland_west"
+    },
+    {
+        "city": "Jat",
+        "state": "Maharashtra",
+        "lat": 17.0719,
+        "lon": 75.3331,
+        "zone": "inland_west"
+    },
+    {
+        "city": "Junnar",
+        "state": "Maharashtra",
+        "lat": 19.2007,
+        "lon": 73.9768,
+        "zone": "inland_west"
+    },
+    {
+        "city": "Kalyan",
+        "lat": 19.2397,
+        "lon": 73.1366,
+        "state": "Maharashtra",
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Kankavli",
+        "lat": 16.3742,
+        "lon": 73.7452,
+        "state": "Maharashtra",
+        "zone": "inland_west"
+    },
+    {
+        "city": "Karad",
+        "lat": 17.2852,
+        "lon": 74.1822,
+        "state": "Maharashtra",
+        "zone": "inland_west"
+    },
+    {
+        "city": "Karjat",
+        "state": "Maharashtra",
+        "lat": 18.9128,
+        "lon": 73.3228,
+        "zone": "inland_west"
+    },
+    {
+        "city": "Khamgaon",
+        "state": "Maharashtra",
+        "lat": 20.6502,
+        "lon": 76.5592,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Khed",
+        "state": "Maharashtra",
+        "lat": 17.7126,
+        "lon": 73.4107,
+        "zone": "inland_west"
+    },
+    {
+        "city": "Khopoli",
+        "state": "Maharashtra",
+        "lat": 18.7877,
+        "lon": 73.3438,
+        "zone": "inland_west"
+    },
+    {
+        "city": "Kolhapur",
+        "lat": 16.7028,
+        "lon": 74.2405,
+        "state": "Maharashtra",
+        "zone": "inland_west"
+    },
+    {
+        "city": "Kopargaon",
+        "state": "Maharashtra",
+        "lat": 19.837,
+        "lon": 74.4829,
+        "zone": "inland_west"
+    },
+    {
+        "city": "Kudal",
+        "lat": 16.0172,
+        "lon": 73.6781,
+        "state": "Maharashtra",
+        "zone": "inland_west"
+    },
+    {
+        "city": "Latur",
+        "lat": 18.3553,
+        "lon": 76.7549,
+        "state": "Maharashtra",
+        "zone": "inland_central"
+    },
+    {
+        "city": "Lonavala",
+        "state": "Maharashtra",
+        "lat": 18.7504,
+        "lon": 73.4069,
+        "zone": "inland_west"
+    },
+    {
+        "city": "Mahabaleshwar",
+        "state": "Maharashtra",
+        "lat": 17.9243,
+        "lon": 73.6576,
+        "zone": "inland_west"
+    },
+    {
+        "city": "Malegaon",
+        "lat": 20.5576,
+        "lon": 74.5247,
+        "state": "Maharashtra",
+        "zone": "inland_west"
+    },
+    {
+        "city": "Malkapur",
+        "state": "Maharashtra",
+        "lat": 20.892,
+        "lon": 76.204,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Manchar",
+        "state": "Maharashtra",
+        "lat": 19.0033,
+        "lon": 73.9427,
+        "zone": "inland_west"
+    },
+    {
+        "city": "Matheran",
+        "state": "Maharashtra",
+        "lat": 18.9902,
+        "lon": 73.27,
+        "zone": "inland_west"
+    },
+    {
+        "city": "Mira Bhayandar",
+        "lat": 19.3184,
+        "lon": 72.8992,
+        "state": "Maharashtra",
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Mumbai",
+        "lat": 19.076,
+        "lon": 72.8777,
+        "state": "Maharashtra",
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Nagpur",
+        "lat": 21.1458,
+        "lon": 79.0882,
+        "state": "Maharashtra",
+        "zone": "inland_central"
+    },
+    {
+        "city": "Nanded",
+        "lat": 19.0943,
+        "lon": 77.4833,
+        "state": "Maharashtra",
+        "zone": "inland_central"
+    },
+    {
+        "city": "Nandurbar",
+        "lat": 21.5142,
+        "lon": 74.5406,
+        "state": "Maharashtra",
+        "zone": "inland_west"
+    },
+    {
+        "city": "Nashik",
+        "lat": 19.9975,
+        "lon": 73.7898,
+        "state": "Maharashtra",
+        "zone": "inland_west"
+    },
+    {
+        "city": "Navi Mumbai",
+        "lat": 19.033,
+        "lon": 73.0297,
+        "state": "Maharashtra",
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Palghar",
+        "lat": 19.7572,
+        "lon": 73.0931,
+        "state": "Maharashtra",
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Palus",
+        "state": "Maharashtra",
+        "lat": 17.045,
+        "lon": 74.4366,
+        "zone": "inland_west"
+    },
+    {
+        "city": "Panchgani",
+        "state": "Maharashtra",
+        "lat": 17.924,
+        "lon": 73.7993,
+        "zone": "inland_west"
+    },
+    {
+        "city": "Pandharpur",
+        "lat": 17.7256,
+        "lon": 75.3002,
+        "state": "Maharashtra",
+        "zone": "inland_west"
+    },
+    {
+        "city": "Panvel",
+        "lat": 18.9895,
+        "lon": 73.1222,
+        "state": "Maharashtra",
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Parbhani",
+        "lat": 19.2902,
+        "lon": 76.6026,
+        "state": "Maharashtra",
+        "zone": "inland_central"
+    },
+    {
+        "city": "Parli",
+        "state": "Maharashtra",
+        "lat": 18.8486,
+        "lon": 76.5297,
+        "zone": "inland_west"
+    },
+    {
+        "city": "Pimpri-Chinchwad",
+        "lat": 18.6279,
+        "lon": 73.801,
+        "state": "Maharashtra",
+        "zone": "inland_west"
+    },
+    {
+        "city": "Pune",
+        "lat": 18.5204,
+        "lon": 73.8567,
+        "state": "Maharashtra",
+        "zone": "inland_west"
+    },
+    {
+        "city": "Raigad",
+        "lat": 18.4928,
+        "lon": 73.1381,
+        "state": "Maharashtra",
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Ratnagiri",
+        "lat": 17.2826,
+        "lon": 73.457,
+        "state": "Maharashtra",
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Sangamner",
+        "state": "Maharashtra",
+        "lat": 19.4906,
+        "lon": 74.2467,
+        "zone": "inland_west"
+    },
+    {
+        "city": "Sangli",
+        "lat": 17.1727,
+        "lon": 74.5868,
+        "state": "Maharashtra",
+        "zone": "inland_west"
+    },
+    {
+        "city": "Satara",
+        "lat": 17.6361,
+        "lon": 74.2983,
+        "state": "Maharashtra",
+        "zone": "inland_west"
+    },
+    {
+        "city": "Sawantwadi",
+        "state": "Maharashtra",
+        "lat": 15.908,
+        "lon": 73.8205,
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Shirpur",
+        "state": "Maharashtra",
+        "lat": 20.4309,
+        "lon": 76.1858,
+        "zone": "inland_west"
+    },
+    {
+        "city": "Shrigonda",
+        "state": "Maharashtra",
+        "lat": 18.6764,
+        "lon": 74.6709,
+        "zone": "inland_west"
+    },
+    {
+        "city": "Shrirampur",
+        "state": "Maharashtra",
+        "lat": 19.642,
+        "lon": 74.7007,
+        "zone": "inland_west"
+    },
+    {
+        "city": "Sindhudurg",
+        "lat": 16.1357,
+        "lon": 73.6522,
+        "state": "Maharashtra",
+        "zone": "inland_west"
+    },
+    {
+        "city": "Solapur",
+        "lat": 17.8499,
+        "lon": 75.2763,
+        "state": "Maharashtra",
+        "zone": "inland_west"
+    },
+    {
+        "city": "Thane",
+        "lat": 19.2183,
+        "lon": 72.9781,
+        "state": "Maharashtra",
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Tuljapur",
+        "lat": 20.9824,
+        "lon": 77.655,
+        "state": "Maharashtra",
+        "zone": "inland_central"
+    },
+    {
+        "city": "Udgir",
+        "state": "Maharashtra",
+        "lat": 18.3921,
+        "lon": 77.1196,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Ulhasnagar",
+        "lat": 19.2236,
+        "lon": 73.1672,
+        "state": "Maharashtra",
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Vasai",
+        "lat": 19.3428,
+        "lon": 72.8054,
+        "state": "Maharashtra",
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Virar",
+        "lat": 19.4498,
+        "lon": 72.8121,
+        "state": "Maharashtra",
+        "zone": "coastal_west"
+    },
+    {
+        "city": "Wai",
+        "state": "Maharashtra",
+        "lat": 17.9424,
+        "lon": 73.9193,
+        "zone": "inland_west"
+    },
+    {
+        "city": "Wardha",
+        "lat": 20.8256,
+        "lon": 78.6131,
+        "state": "Maharashtra",
+        "zone": "inland_central"
+    },
+    {
+        "city": "Washim",
+        "lat": 20.2874,
+        "lon": 77.237,
+        "state": "Maharashtra",
+        "zone": "inland_central"
+    },
+    {
+        "city": "Yavatmal",
+        "lat": 20.0639,
+        "lon": 78.3566,
+        "state": "Maharashtra",
+        "zone": "inland_central"
+    },
+    {
+        "city": "Bishnupur",
+        "state": "Manipur",
+        "lat": 24.6267,
+        "lon": 93.76,
+        "zone": "inland_northeast"
+    },
+    {
+        "city": "Churachandpur",
+        "state": "Manipur",
+        "lat": 24.3469,
+        "lon": 93.6994,
+        "zone": "inland_northeast"
+    },
+    {
+        "city": "Imphal",
+        "lat": 24.817,
+        "lon": 93.9368,
+        "state": "Manipur",
+        "zone": "inland_northeast"
+    },
+    {
+        "city": "Thoubal",
+        "state": "Manipur",
+        "lat": 24.6387,
+        "lon": 93.9969,
+        "zone": "inland_northeast"
+    },
+    {
+        "city": "Jowai",
+        "state": "Meghalaya",
+        "lat": 25.4435,
+        "lon": 92.1973,
+        "zone": "inland_northeast"
+    },
+    {
+        "city": "Nongstoin",
+        "state": "Meghalaya",
+        "lat": 25.5726,
+        "lon": 91.2541,
+        "zone": "inland_northeast"
+    },
+    {
+        "city": "Shillong",
+        "lat": 25.5788,
+        "lon": 91.8933,
+        "state": "Meghalaya",
+        "zone": "inland_northeast"
+    },
+    {
+        "city": "Tura",
+        "state": "Meghalaya",
+        "lat": 25.5126,
+        "lon": 90.2172,
+        "zone": "inland_northeast"
+    },
+    {
+        "city": "Aizawl",
+        "state": "Mizoram",
+        "lat": 23.7278,
+        "lon": 92.718,
+        "zone": "inland_northeast"
+    },
+    {
+        "city": "Champhai",
+        "state": "Mizoram",
+        "lat": 23.6317,
+        "lon": 93.3493,
+        "zone": "inland_northeast"
+    },
+    {
+        "city": "Lunglei",
+        "state": "Mizoram",
+        "lat": 22.952,
+        "lon": 92.6339,
+        "zone": "inland_northeast"
+    },
+    {
+        "city": "Dimapur",
+        "state": "Nagaland",
+        "lat": 25.9041,
+        "lon": 93.7178,
+        "zone": "inland_northeast"
+    },
+    {
+        "city": "Kohima",
+        "state": "Nagaland",
+        "lat": 25.6619,
+        "lon": 94.1019,
+        "zone": "inland_northeast"
+    },
+    {
+        "city": "Mokokchung",
+        "state": "Nagaland",
+        "lat": 26.4796,
+        "lon": 94.5105,
+        "zone": "inland_northeast"
+    },
+    {
+        "city": "Balasore",
+        "state": "Odisha",
+        "lat": 21.5006,
+        "lon": 86.9199,
+        "zone": "coastal_east"
+    },
+    {
+        "city": "Baripada",
+        "state": "Odisha",
+        "lat": 21.9342,
+        "lon": 86.7309,
+        "zone": "coastal_east"
+    },
+    {
+        "city": "Bhadrak",
+        "state": "Odisha",
+        "lat": 20.9854,
+        "lon": 86.5934,
+        "zone": "coastal_east"
+    },
+    {
+        "city": "Bhubaneswar",
+        "lat": 20.2961,
+        "lon": 85.8245,
+        "state": "Odisha",
+        "zone": "coastal_east"
+    },
+    {
+        "city": "Brahmapur",
+        "state": "Odisha",
+        "lat": 19.3098,
+        "lon": 84.7972,
+        "zone": "coastal_east"
+    },
+    {
+        "city": "Cuttack",
+        "lat": 20.4625,
+        "lon": 85.8828,
+        "state": "Odisha",
+        "zone": "coastal_east"
+    },
+    {
+        "city": "Puri",
+        "state": "Odisha",
+        "lat": 19.8076,
+        "lon": 85.8253,
+        "zone": "coastal_east"
+    },
+    {
+        "city": "Rourkela",
+        "state": "Odisha",
+        "lat": 22.2309,
+        "lon": 84.8679,
+        "zone": "coastal_east"
+    },
+    {
+        "city": "Sambalpur",
+        "state": "Odisha",
+        "lat": 21.5571,
+        "lon": 84.1529,
+        "zone": "coastal_east"
+    },
+    {
+        "city": "Pondicherry",
+        "lat": 11.9416,
+        "lon": 79.8083,
+        "state": "Puducherry",
+        "zone": "coastal_east"
+    },
+    {
+        "city": "Amritsar",
+        "lat": 31.634,
+        "lon": 74.8723,
+        "state": "Punjab",
+        "zone": "inland_north"
+    },
+    {
+        "city": "Batala",
+        "state": "Punjab",
+        "lat": 31.8193,
+        "lon": 75.2,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Bathinda",
+        "lat": 30.211,
+        "lon": 74.9455,
+        "state": "Punjab",
+        "zone": "inland_north"
+    },
+    {
+        "city": "Hoshiarpur",
+        "state": "Punjab",
+        "lat": 31.6093,
+        "lon": 75.846,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Jalandhar",
+        "lat": 31.326,
+        "lon": 75.5762,
+        "state": "Punjab",
+        "zone": "inland_north"
+    },
+    {
+        "city": "Ludhiana",
+        "lat": 30.901,
+        "lon": 75.8573,
+        "state": "Punjab",
+        "zone": "inland_north"
+    },
+    {
+        "city": "Mohali",
+        "state": "Punjab",
+        "lat": 30.7041,
+        "lon": 76.7177,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Patiala",
+        "lat": 30.3398,
+        "lon": 76.3869,
+        "state": "Punjab",
+        "zone": "inland_north"
+    },
+    {
+        "city": "Ajmer",
+        "lat": 26.4499,
+        "lon": 74.6399,
+        "state": "Rajasthan",
+        "zone": "inland_west"
+    },
+    {
+        "city": "Alwar",
+        "state": "Rajasthan",
+        "lat": 27.414,
+        "lon": 76.617,
+        "zone": "desert"
+    },
+    {
+        "city": "Bhilwara",
+        "state": "Rajasthan",
+        "lat": 25.471,
+        "lon": 74.6961,
+        "zone": "desert"
+    },
+    {
+        "city": "Bikaner",
+        "lat": 28.0229,
+        "lon": 73.3119,
+        "state": "Rajasthan",
+        "zone": "desert"
+    },
+    {
+        "city": "Jaipur",
+        "lat": 26.9124,
+        "lon": 75.7873,
+        "state": "Rajasthan",
+        "zone": "inland_north"
+    },
+    {
+        "city": "Jaisalmer",
+        "lat": 26.9157,
+        "lon": 70.9083,
+        "state": "Rajasthan",
+        "zone": "desert"
+    },
+    {
+        "city": "Jodhpur",
+        "lat": 26.2389,
+        "lon": 73.0243,
+        "state": "Rajasthan",
+        "zone": "desert"
+    },
+    {
+        "city": "Kota",
+        "lat": 25.2138,
+        "lon": 75.8648,
+        "state": "Rajasthan",
+        "zone": "inland_west"
+    },
+    {
+        "city": "Sikar",
+        "state": "Rajasthan",
+        "lat": 27.6624,
+        "lon": 75.028,
+        "zone": "desert"
+    },
+    {
+        "city": "Udaipur",
+        "lat": 24.5854,
+        "lon": 73.7125,
+        "state": "Rajasthan",
+        "zone": "inland_west"
+    },
+    {
+        "city": "Gangtok",
+        "lat": 27.3389,
+        "lon": 88.6065,
+        "state": "Sikkim",
+        "zone": "himalayan"
+    },
+    {
+        "city": "Gyalshing",
+        "state": "Sikkim",
+        "lat": 27.4185,
+        "lon": 88.1808,
+        "zone": "himalayan"
+    },
+    {
+        "city": "Mangan",
+        "state": "Sikkim",
+        "lat": 27.7497,
+        "lon": 88.5212,
+        "zone": "himalayan"
+    },
+    {
+        "city": "Namchi",
+        "state": "Sikkim",
+        "lat": 27.3031,
+        "lon": 88.3786,
+        "zone": "himalayan"
+    },
+    {
+        "city": "Chennai",
+        "lat": 13.0827,
+        "lon": 80.2707,
+        "state": "Tamil Nadu",
+        "zone": "coastal_east"
+    },
+    {
+        "city": "Coimbatore",
+        "lat": 11.0168,
+        "lon": 76.9558,
+        "state": "Tamil Nadu",
+        "zone": "inland_south"
+    },
+    {
+        "city": "Erode",
+        "lat": 11.341,
+        "lon": 77.7172,
+        "state": "Tamil Nadu",
+        "zone": "inland_south"
+    },
+    {
+        "city": "Madurai",
+        "lat": 9.9252,
+        "lon": 78.1198,
+        "state": "Tamil Nadu",
+        "zone": "inland_south"
+    },
+    {
+        "city": "Salem",
+        "lat": 11.6643,
+        "lon": 78.146,
+        "state": "Tamil Nadu",
+        "zone": "inland_south"
+    },
+    {
+        "city": "Thoothukudi",
+        "state": "Tamil Nadu",
+        "lat": 8.8457,
+        "lon": 77.9938,
+        "zone": "coastal_east"
+    },
+    {
+        "city": "Tiruchirappalli",
+        "lat": 10.7905,
+        "lon": 78.7047,
+        "state": "Tamil Nadu",
+        "zone": "inland_south"
+    },
+    {
+        "city": "Tirunelveli",
+        "lat": 8.7139,
+        "lon": 77.7567,
+        "state": "Tamil Nadu",
+        "zone": "inland_south"
+    },
+    {
+        "city": "Tiruppur",
+        "state": "Tamil Nadu",
+        "lat": 10.7915,
+        "lon": 77.5325,
+        "zone": "coastal_east"
+    },
+    {
+        "city": "Vellore",
+        "lat": 12.9165,
+        "lon": 79.1325,
+        "state": "Tamil Nadu",
+        "zone": "inland_south"
+    },
+    {
+        "city": "Hyderabad",
+        "lat": 17.385,
+        "lon": 78.4867,
+        "state": "Telangana",
+        "zone": "inland_south"
+    },
+    {
+        "city": "Karimnagar",
+        "state": "Telangana",
+        "lat": 18.4348,
+        "lon": 79.1328,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Khammam",
+        "state": "Telangana",
+        "lat": 17.2465,
+        "lon": 80.15,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Mahbubnagar",
+        "state": "Telangana",
+        "lat": 16.7435,
+        "lon": 77.9923,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Nizamabad",
+        "state": "Telangana",
+        "lat": 18.6733,
+        "lon": 78.0978,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Ramagundam",
+        "state": "Telangana",
+        "lat": 18.7615,
+        "lon": 79.4788,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Warangal",
+        "state": "Telangana",
+        "lat": 17.9821,
+        "lon": 79.5971,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Agartala",
+        "state": "Tripura",
+        "lat": 23.8312,
+        "lon": 91.2824,
+        "zone": "inland_northeast"
+    },
+    {
+        "city": "Dharmanagar",
+        "state": "Tripura",
+        "lat": 24.444,
+        "lon": 92.2073,
+        "zone": "inland_northeast"
+    },
+    {
+        "city": "Udaipur",
+        "state": "Tripura",
+        "lat": 23.5416,
+        "lon": 91.4918,
+        "zone": "inland_northeast"
+    },
+    {
+        "city": "Agra",
+        "lat": 27.1767,
+        "lon": 78.0081,
+        "state": "Uttar Pradesh",
+        "zone": "inland_north"
+    },
+    {
+        "city": "Aligarh",
+        "state": "Uttar Pradesh",
+        "lat": 27.8761,
+        "lon": 78.1358,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Allahabad",
+        "state": "Uttar Pradesh",
+        "lat": 25.4381,
+        "lon": 81.8338,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Bareilly",
+        "state": "Uttar Pradesh",
+        "lat": 28.4582,
+        "lon": 79.4047,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Gorakhpur",
+        "state": "Uttar Pradesh",
+        "lat": 26.6678,
+        "lon": 83.3642,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Kanpur",
+        "lat": 26.4499,
+        "lon": 80.3319,
+        "state": "Uttar Pradesh",
+        "zone": "inland_north"
+    },
+    {
+        "city": "Lucknow",
+        "lat": 26.8467,
+        "lon": 80.9462,
+        "state": "Uttar Pradesh",
+        "zone": "inland_north"
+    },
+    {
+        "city": "Meerut",
+        "state": "Uttar Pradesh",
+        "lat": 29.0019,
+        "lon": 77.768,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Moradabad",
+        "state": "Uttar Pradesh",
+        "lat": 28.8797,
+        "lon": 78.8095,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Saharanpur",
+        "state": "Uttar Pradesh",
+        "lat": 29.9857,
+        "lon": 77.5041,
+        "zone": "inland_central"
+    },
+    {
+        "city": "Varanasi",
+        "lat": 25.3176,
+        "lon": 83.0068,
+        "state": "Uttar Pradesh",
+        "zone": "inland_north"
+    },
+    {
+        "city": "Dehradun",
+        "lat": 30.3165,
+        "lon": 78.0322,
+        "state": "Uttarakhand",
+        "zone": "himalayan"
+    },
+    {
+        "city": "Haldwani",
+        "state": "Uttarakhand",
+        "lat": 29.2145,
+        "lon": 79.5279,
+        "zone": "himalayan"
+    },
+    {
+        "city": "Haridwar",
+        "state": "Uttarakhand",
+        "lat": 29.9124,
+        "lon": 78.0087,
+        "zone": "himalayan"
+    },
+    {
+        "city": "Kashipur",
+        "state": "Uttarakhand",
+        "lat": 29.2118,
+        "lon": 78.9617,
+        "zone": "himalayan"
+    },
+    {
+        "city": "Mussoorie",
+        "lat": 30.4598,
+        "lon": 78.0776,
+        "state": "Uttarakhand",
+        "zone": "himalayan"
+    },
+    {
+        "city": "Nainital",
+        "lat": 29.3919,
+        "lon": 79.4542,
+        "state": "Uttarakhand",
+        "zone": "himalayan"
+    },
+    {
+        "city": "Rishikesh",
+        "lat": 30.0869,
+        "lon": 78.2676,
+        "state": "Uttarakhand",
+        "zone": "himalayan"
+    },
+    {
+        "city": "Roorkee",
+        "state": "Uttarakhand",
+        "lat": 29.8693,
+        "lon": 77.8902,
+        "zone": "himalayan"
+    },
+    {
+        "city": "Rudrapur",
+        "state": "Uttarakhand",
+        "lat": 28.9707,
+        "lon": 79.3973,
+        "zone": "himalayan"
+    },
+    {
+        "city": "Asansol",
+        "lat": 23.6739,
+        "lon": 86.9524,
+        "state": "West Bengal",
+        "zone": "inland_east"
+    },
+    {
+        "city": "Baharampur",
+        "state": "West Bengal",
+        "lat": 24.1045,
+        "lon": 88.2511,
+        "zone": "coastal_east"
+    },
+    {
+        "city": "Bardhaman",
+        "state": "West Bengal",
+        "lat": 23.2496,
+        "lon": 87.8682,
+        "zone": "coastal_east"
+    },
+    {
+        "city": "Darjeeling",
+        "lat": 27.041,
+        "lon": 88.2663,
+        "state": "West Bengal",
+        "zone": "himalayan"
+    },
+    {
+        "city": "Durgapur",
+        "lat": 23.5204,
+        "lon": 87.3119,
+        "state": "West Bengal",
+        "zone": "inland_east"
+    },
+    {
+        "city": "Habra",
+        "state": "West Bengal",
+        "lat": 22.8401,
+        "lon": 88.6631,
+        "zone": "coastal_east"
+    },
+    {
+        "city": "Howrah",
+        "lat": 22.5958,
+        "lon": 88.311,
+        "state": "West Bengal",
+        "zone": "coastal_east"
+    },
+    {
+        "city": "Kharagpur",
+        "state": "West Bengal",
+        "lat": 22.3431,
+        "lon": 87.3013,
+        "zone": "coastal_east"
+    },
+    {
+        "city": "Kolkata",
+        "lat": 22.5726,
+        "lon": 88.3639,
+        "state": "West Bengal",
+        "zone": "coastal_east"
+    },
+    {
+        "city": "Malda",
+        "state": "West Bengal",
+        "lat": 25.0057,
+        "lon": 88.1398,
+        "zone": "coastal_east"
+    },
+    {
+        "city": "Siliguri",
+        "lat": 26.7271,
+        "lon": 88.3953,
+        "state": "West Bengal",
+        "zone": "himalayan"
+    }
+]

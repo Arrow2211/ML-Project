@@ -92,7 +92,11 @@ export default function FeatureImportanceChart({ data, title = "Global Feature I
   return (
     <div className="chart-card">
       <h3>📈 {title}</h3>
-      <p className="chart-subtitle">How much each feature contributes to the model's decisions</p>
+      <p className="chart-subtitle">
+        {title.includes("Global") 
+          ? "How much each feature generally affects the model's decisions." 
+          : `Main factors that influenced the risk for ${title.split(" ")[0]}.`}
+      </p>
       <div className="chart-container" style={{ height: "380px" }}>
         <canvas ref={canvasRef} id="feature-importance-chart" />
       </div>

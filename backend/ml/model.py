@@ -5,108 +5,120 @@ Random Forest model for multi-hazard risk prediction with explainability.
 import numpy as np
 import joblib
 import os
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
 
 
 MODEL_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "models")
 
 
-def train_model(X, y, feature_names, test_size=0.2, seed=42):
+def train_model(X, y_true=None, feature_names=None, n_clusters=3, seed=42):
     """
-    Train a Random Forest Classifier.
+    Train a K-Means model for clustering and map clusters to risk levels.
     
     Returns:
-        dict with model, metrics, feature importances, and train/test data info
+        dict with model, metrics, cluster mapping, and feature stats
     """
-    # Check if we have enough samples for stratification
-    min_class_counts = np.unique(y, return_counts=True)[1].min()
-    stratify_data = y if min_class_counts >= 2 else None
-    
-    try:
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=test_size, random_state=seed, stratify=stratify_data
-        )
-    except Exception as e:
-        print(f"  ⚠ Stratified split failed: {e}. Falling back to simple split.")
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=test_size, random_state=seed
-        )
-    
-    model = RandomForestClassifier(
-        n_estimators=200,
-        max_depth=15,
-        min_samples_split=5,
-        min_samples_leaf=2,
+    if len(X) < n_clusters:
+        return {"error": "Not enough samples for clustering"}
+
+    model = KMeans(
+        n_clusters=n_clusters,
         random_state=seed,
-        n_jobs=-1,
-        class_weight="balanced"
+        n_init=10
     )
-    model.fit(X_train, y_train)
+    cluster_labels = model.fit_predict(X)
     
-    # Evaluate
-    y_pred = model.predict(X_test)
-    accuracy = accuracy_score(y_test, y_pred)
-    report = classification_report(y_test, y_pred, output_dict=True)
-    conf_matrix = confusion_matrix(y_test, y_pred).tolist()
+    # Calculate Silhouette Score (Standard metric for unsupervised clustering)
+    sil_score = silhouette_score(X, cluster_labels)
     
-    # Feature importance
-    importances = model.feature_importances_
-    importance_dict = {
-        name: round(float(imp) * 100, 2)
+    # ─── Cluster Ranking Logic ─────────────────────────────────────────
+    # Map cluster IDs (0, 1, 2) to risk levels (Low, Medium, High)
+    # based on their centroid severity.
+    centroids = model.cluster_centers_
+    
+    # Severity features: features where higher values generally mean higher risk
+    # Based on our standard engineering: Rainfall, Wind, Earthquake, etc.
+    # Note: feature_names helps us find the index of severity features
+    severity_features = [
+        "Rainfall", "Wind_Speed", "Earthquake_Frequency", 
+        "Cyclone_Risk", "Drought_Index", "Composite_Hazard_Index"
+    ]
+    
+    severity_indices = [
+        feature_names.index(feat) for feat in severity_features 
+        if feat in feature_names
+    ]
+    
+    # Calculate a simple "Severity Score" for each centroid
+    # Since X is scaled (StandardScaler), higher positive values = more extreme
+    cluster_scores = []
+    for i in range(n_clusters):
+        score = centroids[i][severity_indices].sum()
+        cluster_scores.append((i, score))
+    
+    # Sort clusters by score: lowest -> highest
+    # Mapping: lowest_score -> 'Low', middle -> 'Medium', highest_score -> 'High'
+    sorted_clusters = sorted(cluster_scores, key=lambda x: x[1])
+    cluster_mapping = {
+        sorted_clusters[0][0]: "Low",
+        sorted_clusters[1][0]: "Medium",
+        sorted_clusters[2][0]: "High"
+    }
+    
+    # Optional: Compare with ground truth (y_true) if available
+    comparison_metrics = {}
+    if y_true is not None:
+        # We can calculate "Accuracy" by mapping it back (benchmarking)
+        # However, for pure unsupervised we focus on Silhouette
+        pass
+
+    return {
+        "model": model,
+        "silhouette_score": round(float(sil_score), 4),
+        "cluster_mapping": cluster_mapping,
+        "train_samples": len(X),
+        "centroids": centroids.tolist(),
+        "feature_names": feature_names
+    }
+
+
+def predict_risk(model, cluster_mapping, X_scaled, feature_names):
+    """
+    Predict risk level using the fitted KMeans model and cluster mapping.
+    """
+    cluster_id = model.predict(X_scaled)[0]
+    prediction_label = cluster_mapping[cluster_id]
+    
+    # For KMeans, we can calculate 'confidence' based on distance to centroid
+    distances = model.transform(X_scaled)[0]
+    total_dist = distances.sum()
+    # Higher inverse distance = more 'belonging' to that cluster
+    inverse_dists = 1.0 / (distances + 1e-6)
+    probabilities = inverse_dists / inverse_dists.sum()
+    
+    prob_dict = {
+        cluster_mapping[i]: round(float(probabilities[i]) * 100, 2)
+        for i in range(len(probabilities))
+    }
+    
+    # Feature contributions: How much did each feature contribute to picking THIS cluster?
+    # We look at the feature value relative to the cluster's centroid
+    centroid = model.cluster_centers_[cluster_id]
+    feature_values = X_scaled[0]
+    
+    # Contribution is higher if feature is closer to this centroid than others
+    # but for simplicity, we'll use the feature's absolute magnitude in the centroid
+    importances = np.abs(centroid)
+    total_imp = importances.sum()
+    contribution_dict = {
+        name: round(float(imp / total_imp) * 100, 2)
         for name, imp in sorted(zip(feature_names, importances), key=lambda x: -x[1])
     }
     
     return {
-        "model": model,
-        "accuracy": round(float(accuracy), 4),
-        "classification_report": report,
-        "confusion_matrix": conf_matrix,
-        "feature_importance": importance_dict,
-        "train_samples": len(X_train),
-        "test_samples": len(X_test),
-    }
-
-
-def predict_risk(model, label_encoder, X_scaled, feature_names):
-    """
-    Predict risk level with per-prediction feature contribution.
-    
-    Uses the tree structure to determine feature contribution for each prediction.
-    
-    Returns:
-        dict with prediction, probabilities, and feature contributions
-    """
-    prediction_encoded = model.predict(X_scaled)
-    prediction_label = label_encoder.inverse_transform(prediction_encoded)[0]
-    
-    probabilities = model.predict_proba(X_scaled)[0]
-    prob_dict = {
-        label: round(float(prob) * 100, 2)
-        for label, prob in zip(label_encoder.classes_, probabilities)
-    }
-    
-    # Per-prediction feature contribution using tree-based approach
-    # We use the feature importances weighted by the absolute feature values
-    importances = model.feature_importances_
-    feature_values = X_scaled[0]
-    
-    # Weighted contributions: importance × |feature_value| (standardized)
-    raw_contributions = importances * np.abs(feature_values)
-    total = raw_contributions.sum()
-    if total > 0:
-        contributions = raw_contributions / total
-    else:
-        contributions = importances
-    
-    contribution_dict = {
-        name: round(float(contrib) * 100, 2)
-        for name, contrib in sorted(zip(feature_names, contributions), key=lambda x: -x[1])
-    }
-    
-    return {
         "risk_level": prediction_label,
+        "cluster_id": int(cluster_id),
         "probabilities": prob_dict,
         "feature_contributions": contribution_dict,
         "explanation": _generate_explanation(prediction_label, contribution_dict)
@@ -144,23 +156,26 @@ def _generate_explanation(risk_level, contributions):
         return f"The risk is LOW. The main factors considered were {parts[0]}, {parts[1]}, and {parts[2]}, all within safe thresholds."
 
 
-def get_feature_importance(model, feature_names):
-    """Get global feature importance from the trained model."""
-    importances = model.feature_importances_
-    return {
-        name: round(float(imp) * 100, 2)
-        for name, imp in sorted(zip(feature_names, importances), key=lambda x: -x[1])
-    }
+def get_cluster_stats(model, cluster_mapping, feature_names):
+    """Get statistics for each cluster."""
+    centroids = model.cluster_centers_
+    stats = {}
+    for i, label in cluster_mapping.items():
+        stats[label] = {
+            name: round(float(val), 3)
+            for name, val in zip(feature_names, centroids[i])
+        }
+    return stats
 
 
-def save_model(model, scaler, label_encoder, feature_names, path=None):
+def save_model(model, scaler, cluster_mapping, feature_names, path=None):
     """Save model artifacts to disk."""
     os.makedirs(MODEL_DIR, exist_ok=True)
     path = path or MODEL_DIR
     
     joblib.dump(model, os.path.join(path, "model.joblib"))
     joblib.dump(scaler, os.path.join(path, "scaler.joblib"))
-    joblib.dump(label_encoder, os.path.join(path, "label_encoder.joblib"))
+    joblib.dump(cluster_mapping, os.path.join(path, "cluster_mapping.joblib"))
     joblib.dump(feature_names, os.path.join(path, "feature_names.joblib"))
 
 
@@ -170,7 +185,7 @@ def load_model(path=None):
     
     model = joblib.load(os.path.join(path, "model.joblib"))
     scaler = joblib.load(os.path.join(path, "scaler.joblib"))
-    label_encoder = joblib.load(os.path.join(path, "label_encoder.joblib"))
+    cluster_mapping = joblib.load(os.path.join(path, "cluster_mapping.joblib"))
     feature_names = joblib.load(os.path.join(path, "feature_names.joblib"))
     
-    return model, scaler, label_encoder, feature_names
+    return model, scaler, cluster_mapping, feature_names

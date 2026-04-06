@@ -10,7 +10,8 @@ from sklearn.preprocessing import StandardScaler, LabelEncoder
 
 FEATURE_COLUMNS = [
     "Latitude", "Longitude", "Temperature", "Rainfall", "Humidity",
-    "Wind_Speed", "Earthquake_Frequency", "Drought_Index", "Cyclone_Risk"
+    "Wind_Speed", "Earthquake_Frequency", "Drought_Index", "Cyclone_Risk",
+    "Rainfall_Wind_Interaction", "Composite_Hazard_Index"
 ]
 
 
@@ -69,7 +70,7 @@ def preprocess(df, scaler=None, label_encoder=None, is_training=True):
     df = engineer_features(df)
     
     # Select feature columns
-    available_features = [col for col in FEATURE_COLUMNS if col in df.columns]
+    available_features = [col for col in df.columns if col in FEATURE_COLUMNS]
     X = df[available_features].values
     
     if is_training:
@@ -77,11 +78,15 @@ def preprocess(df, scaler=None, label_encoder=None, is_training=True):
         scaler = StandardScaler()
         X_scaled = scaler.fit_transform(X)
         
-        # Encode target
-        label_encoder = LabelEncoder()
-        y = label_encoder.fit_transform(df["Risk_Level"])
+        # Encode target if available (optional for unsupervised)
+        y_encoded = None
+        if "Risk_Level" in df.columns:
+            label_encoder = label_encoder or LabelEncoder()
+            # Ensure label encoder is always fit to the standard levels for consistency
+            label_encoder.fit(["Low", "Medium", "High"])
+            y_encoded = label_encoder.transform(df["Risk_Level"])
         
-        return X_scaled, y, scaler, label_encoder, available_features
+        return X_scaled, y_encoded, scaler, label_encoder, available_features
     else:
         # Use pre-fitted scaler
         X_scaled = scaler.transform(X)
