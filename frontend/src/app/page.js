@@ -43,7 +43,7 @@ export default function Home() {
   useEffect(() => {
     if (result && result.city) {
       if (result.feature_contributions) {
-        setFeatureImportance(result.feature_contributions);
+        setClusterStats(prev => ({ ...prev, [result.city || "Prediction"]: result.feature_contributions }));
       }
       const fetchCityData = async () => {
         try {
@@ -88,11 +88,11 @@ export default function Home() {
                 <span className="stat-label">Silhouette Score</span>
               </div>
               <div className="stat-chip">
-                <span className="stat-value">{modelInfo.train_samples + modelInfo.test_samples}</span>
+                <span className="stat-value">{modelInfo.train_samples}</span>
                 <span className="stat-label">Training Samples</span>
               </div>
               <div className="stat-chip">
-                <span className="stat-value">50</span>
+                <span className="stat-value">{modelInfo.total_cities || 167}</span>
                 <span className="stat-label">Indian Cities</span>
               </div>
             </div>
@@ -104,7 +104,7 @@ export default function Home() {
       {!backendReady && (
         <div className="connection-warning">
           <span>⚠️</span>
-          <span>Backend not connected. Start the FastAPI server on port 8000.</span>
+          <span>Backend not connected. Ensure the API server is running and `NEXT_PUBLIC_API_URL` is set correctly.</span>
         </div>
       )}
 

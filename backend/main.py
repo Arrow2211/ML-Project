@@ -76,7 +76,8 @@ async def startup():
                 "silhouette_score": result["silhouette_score"],
                 "cluster_mapping": result["cluster_mapping"],
                 "train_samples": result["train_samples"],
-                "cluster_stats": get_cluster_stats(result["model"], result["cluster_mapping"], feat_names)
+                "cluster_stats": get_cluster_stats(result["model"], result["cluster_mapping"], feat_names),
+                "total_cities": len(INDIAN_CITIES)
             }
             save_model(result["model"], scaler, result["cluster_mapping"], feat_names)
             print(f"✅ Background: Model trained — Silhouette: {result['silhouette_score']:.4f}")
@@ -213,7 +214,8 @@ async def train():
         "silhouette_score": result["silhouette_score"],
         "cluster_mapping": result["cluster_mapping"],
         "train_samples": result["train_samples"],
-        "cluster_stats": get_cluster_stats(result["model"], result["cluster_mapping"], feat_names)
+        "cluster_stats": get_cluster_stats(result["model"], result["cluster_mapping"], feat_names),
+        "total_cities": len(INDIAN_CITIES)
     }
     
     save_model(result["model"], scaler, result["cluster_mapping"], feat_names)
