@@ -35,18 +35,19 @@ def engineer_features(df):
     df["Rainfall_Wind_Interaction"] = (df["Rainfall"] * df["Wind_Speed"]) / 100.0
     
     # Composite hazard index: weighted combination of key risk indicators
-    # We use fixed normalization constants aligned with IMD/USGS scales 
-    # to ensure consistency between training and single-row prediction.
-    max_eq = 25.0
-    max_rain = 500.0
+    # We use realistic normalization constants for the Indian context.
+    max_eq = 10.0   # 10 earthquakes in a period is already extreme for most of India
+    max_rain = 3500.0 # Align with extreme monsoon peaks (e.g. Konkan coast)
     max_wind = 150.0
     
+    # Weights optimized for socio-economic impact in India: 
+    # Rainfall and Cyclones affect more people/cities more frequently than major earthquakes.
     df["Composite_Hazard_Index"] = (
-        0.3 * df.get("Cyclone_Risk", 0).fillna(0) +
-        0.25 * (df.get("Earthquake_Frequency", 0).fillna(0) / max_eq) +
-        0.2 * df.get("Drought_Index", 0).fillna(0) +
-        0.15 * (df.get("Rainfall", 0).fillna(0) / max_rain) +
-        0.1 * (df.get("Wind_Speed", 0).fillna(0) / max_wind)
+        0.35 * df.get("Rainfall", 0).fillna(0) / max_rain +
+        0.25 * df.get("Cyclone_Risk", 0).fillna(0) +
+        0.20 * (df.get("Earthquake_Frequency", 0).fillna(0) / max_eq) +
+        0.10 * df.get("Drought_Index", 0).fillna(0) +
+        0.10 * (df.get("Wind_Speed", 0).fillna(0) / max_wind)
     )
     
     return df

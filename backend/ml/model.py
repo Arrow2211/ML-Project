@@ -11,6 +11,28 @@ from sklearn.metrics import silhouette_score
 
 MODEL_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "models")
 
+# Feature Weights to prioritize primary hazards in clustering
+# These weights amplify the distance contribution of key features
+FEATURE_WEIGHTS = {
+    "Rainfall": 3.0,
+    "Cyclone_Risk": 3.5,
+    "Earthquake_Frequency": 2.5,
+    "Composite_Hazard_Index": 4.0,
+    "Wind_Speed": 1.5,
+    "Rainfall_Wind_Interaction": 2.0,
+    "Latitude": 1.0,
+    "Longitude": 1.0,
+    "Temperature": 0.5,
+    "Humidity": 0.5,
+    "Drought_Index": 1.5
+}
+
+
+def _apply_weights(X, feature_names):
+    """Apply feature weights to the standardized input matrix."""
+    weights = np.array([FEATURE_WEIGHTS.get(name, 1.0) for name in feature_names])
+    return X * weights, weights
+
 
 def train_model(X, y_true=None, feature_names=None, n_clusters=3, seed=42):
     """
@@ -22,15 +44,18 @@ def train_model(X, y_true=None, feature_names=None, n_clusters=3, seed=42):
     if len(X) < n_clusters:
         return {"error": "Not enough samples for clustering"}
 
+    # Apply weights before clustering
+    X_weighted, weights = _apply_weights(X, feature_names)
+
     model = KMeans(
         n_clusters=n_clusters,
         random_state=seed,
         n_init=10
     )
-    cluster_labels = model.fit_predict(X)
+    cluster_labels = model.fit_predict(X_weighted)
     
-    # Calculate Silhouette Score (Standard metric for unsupervised clustering)
-    sil_score = silhouette_score(X, cluster_labels)
+    # Calculate Silhouette Score on weighted data
+    sil_score = silhouette_score(X_weighted, cluster_labels)
     
     # ─── Cluster Ranking Logic ─────────────────────────────────────────
     # Map cluster IDs (0, 1, 2) to risk levels (Low, Medium, High)
@@ -50,11 +75,15 @@ def train_model(X, y_true=None, feature_names=None, n_clusters=3, seed=42):
         if feat in feature_names
     ]
     
-    # Calculate a simple "Severity Score" for each centroid
-    # Since X is scaled (StandardScaler), higher positive values = more extreme
+    # Calculate a "Severity Score" for each weighted centroid
     cluster_scores = []
     for i in range(n_clusters):
-        score = centroids[i][severity_indices].sum()
+        centroid = centroids[i]
+        # Use a combination of weighted sum and max-component for ranking
+        # This ensures a cluster with ONE extreme hazard is ranked high
+        mean_severity = centroid[severity_indices].mean()
+        max_severity = centroid[severity_indices].max()
+        score = 0.7 * mean_severity + 0.3 * max_severity
         cluster_scores.append((i, score))
     
     # Sort clusters by score: lowest -> highest
@@ -87,11 +116,14 @@ def predict_risk(model, cluster_mapping, X_scaled, feature_names):
     """
     Predict risk level using the fitted KMeans model and cluster mapping.
     """
-    cluster_id = model.predict(X_scaled)[0]
+    # Apply weights to the input vector
+    X_weighted, _ = _apply_weights(X_scaled, feature_names)
+    
+    cluster_id = model.predict(X_weighted)[0]
     prediction_label = cluster_mapping[cluster_id]
     
-    # For KMeans, we can calculate 'confidence' based on distance to centroid
-    distances = model.transform(X_scaled)[0]
+    # For KMeans, we can calculate 'confidence' based on distance to centroid in weighted space
+    distances = model.transform(X_weighted)[0]
     
     # Shifted Softmax probability mapping (Industry Standard)
     # We subtract the min distance to make the closest cluster clearly stand out (exp(0) = 1)
@@ -111,9 +143,11 @@ def predict_risk(model, cluster_mapping, X_scaled, feature_names):
     centroid = model.cluster_centers_[cluster_id]
     feature_values = X_scaled[0]
     
-    # Contribution is higher if feature is closer to this centroid than others
-    # but for simplicity, we'll use the feature's absolute magnitude in the centroid
-    importances = np.abs(centroid)
+    # Un-weight the centroid for accurate 'importance' and stat reporting
+    _, weights = _apply_weights(np.zeros((1, len(feature_names))), feature_names)
+    true_centroid = centroid / weights
+    
+    importances = np.abs(true_centroid)
     total_imp = importances.sum()
     contribution_dict = {
         name: round(float(imp / total_imp) * 100, 2)
@@ -163,11 +197,14 @@ def _generate_explanation(risk_level, contributions):
 def get_cluster_stats(model, cluster_mapping, feature_names):
     """Get statistics for each cluster."""
     centroids = model.cluster_centers_
+    _, weights = _apply_weights(np.zeros((1, len(feature_names))), feature_names)
     stats = {}
     for i, label in cluster_mapping.items():
+        # Un-weight centroids for reporting
+        true_centroid = centroids[i] / weights
         stats[label] = {
             name: round(float(val), 3)
-            for name, val in zip(feature_names, centroids[i])
+            for name, val in zip(feature_names, true_centroid)
         }
     return stats
 
