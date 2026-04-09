@@ -92,10 +92,15 @@ def predict_risk(model, cluster_mapping, X_scaled, feature_names):
     
     # For KMeans, we can calculate 'confidence' based on distance to centroid
     distances = model.transform(X_scaled)[0]
-    total_dist = distances.sum()
-    # Higher inverse distance = more 'belonging' to that cluster
-    inverse_dists = 1.0 / (distances + 1e-6)
-    probabilities = inverse_dists / inverse_dists.sum()
+    
+    # Softmax-based probability mapping (Smoother and more peaked than inverse distance)
+    # We use negative distances so that smaller distance = higher probability
+    # Gamma acts as a 'temperature' parameter to control confidence
+    # We normalize distances to prevent extreme values from causing overflow
+    norm_distances = distances / (np.max(distances) + 1e-6)
+    gamma = 5.0  # Increased gamma for more peaked distributions
+    exp_dists = np.exp(-gamma * norm_distances)
+    probabilities = exp_dists / exp_dists.sum()
     
     prob_dict = {
         cluster_mapping[i]: round(float(probabilities[i]) * 100, 2)
