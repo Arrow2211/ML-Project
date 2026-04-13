@@ -45,7 +45,7 @@ def update_baseline():
     missing_cities = [c for c in meta_cities if c["city"] not in existing_cities]
     
     if not missing_cities:
-        print("✅ All cities are already present in the baseline.")
+        print("All cities are already present in the baseline.")
         if not df_base.empty:
             df_base = df_base.sort_values(["State", "City"])
             df_base.to_csv(BASELINE_FILE, index=False)

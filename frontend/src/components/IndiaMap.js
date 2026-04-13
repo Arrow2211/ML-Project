@@ -74,14 +74,14 @@ export default function IndiaMap() {
                 style={{ cursor: "pointer" }}
               >
                 {/* Glow effect */}
-                <circle cx={x} cy={y} r={isHovered ? 16 : 10} fill={color} opacity={0.15} />
-                <circle cx={x} cy={y} r={isHovered ? 10 : 6} fill={color} opacity={0.3} />
+                <circle cx={x} cy={y} r={isHovered ? 12 : 6} fill={color} opacity={0.12} />
+                <circle cx={x} cy={y} r={isHovered ? 8 : 4} fill={color} opacity={0.25} />
                 <circle
                   cx={x} cy={y}
-                  r={isHovered ? 6 : 4}
+                  r={isHovered ? 4 : 2}
                   fill={color}
-                  stroke="rgba(255,255,255,0.5)"
-                  strokeWidth="1"
+                  stroke="rgba(255,255,255,0.4)"
+                  strokeWidth="0.5"
                 />
                 {isHovered && (
                   <g>
