@@ -6,12 +6,12 @@ import RiskResult from "@/components/RiskResult";
 import FeatureImportanceChart from "@/components/FeatureImportanceChart";
 import RiskDistributionChart from "@/components/RiskDistributionChart";
 import IndiaMap from "@/components/IndiaMap";
-import { getClusterStats, getRiskDistribution, getModelInfo, healthCheck } from "@/lib/api";
+import { getFeatureImportance, getRiskDistribution, getModelInfo, healthCheck } from "@/lib/api";
 
 export default function Home() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [clusterStats, setClusterStats] = useState(null);
+  const [featureImportance, setFeatureImportance] = useState(null);
   const [riskDistribution, setRiskDistribution] = useState(null);
   const [modelInfo, setModelInfo] = useState(null);
   const [backendReady, setBackendReady] = useState(false);
@@ -23,12 +23,12 @@ export default function Home() {
       setBackendReady(healthy);
       if (healthy) {
         try {
-          const [cs, rd, mi] = await Promise.all([
-            getClusterStats(),
+          const [fi, rd, mi] = await Promise.all([
+            getFeatureImportance(),
             getRiskDistribution(),
             getModelInfo(),
           ]);
-          setClusterStats(cs.cluster_stats);
+          setFeatureImportance(fi.feature_importance);
           setRiskDistribution(rd.distribution);
           setModelInfo(mi);
         } catch (e) {
@@ -43,7 +43,7 @@ export default function Home() {
   useEffect(() => {
     if (result && result.city) {
       if (result.feature_contributions) {
-        setClusterStats(prev => ({ ...prev, [result.city || "Prediction"]: result.feature_contributions }));
+        setFeatureImportance(result.feature_contributions);
       }
       const fetchCityData = async () => {
         try {
@@ -84,15 +84,15 @@ export default function Home() {
           {modelInfo && (
             <div className="stats-row">
               <div className="stat-chip">
-                <span className="stat-value">{(modelInfo.silhouette_score * 100).toFixed(1)}%</span>
-                <span className="stat-label">Silhouette Score</span>
+                <span className="stat-value">{(modelInfo.accuracy * 100).toFixed(1)}%</span>
+                <span className="stat-label">Model Accuracy</span>
               </div>
               <div className="stat-chip">
-                <span className="stat-value">{modelInfo.train_samples}</span>
+                <span className="stat-value">{modelInfo.train_samples + modelInfo.test_samples}</span>
                 <span className="stat-label">Training Samples</span>
               </div>
               <div className="stat-chip">
-                <span className="stat-value">{modelInfo.total_cities || 167}</span>
+                <span className="stat-value">50</span>
                 <span className="stat-label">Indian Cities</span>
               </div>
             </div>
@@ -104,7 +104,7 @@ export default function Home() {
       {!backendReady && (
         <div className="connection-warning">
           <span>⚠️</span>
-          <span>Backend not connected. Ensure the API server is running and `NEXT_PUBLIC_API_URL` is set correctly.</span>
+          <span>Backend not connected. Start the FastAPI server on port 8000.</span>
         </div>
       )}
 
@@ -160,8 +160,8 @@ export default function Home() {
           <section className="analytics-section">
             <div className="charts-grid">
               <FeatureImportanceChart 
-                data={result?.feature_contributions || (clusterStats ? clusterStats["High"] : null)} 
-                title={result?.city && result.city !== "Custom Location" ? `${result.city} Hazard Profile` : "High-Risk Cluster Profile"}
+                data={featureImportance} 
+                title={result?.city && result.city !== "Custom Location" ? `${result.city} Feature Priority` : "Global Feature Importance"}
               />
               <RiskDistributionChart 
                 data={riskDistribution} 
