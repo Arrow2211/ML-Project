@@ -1,7 +1,3 @@
-"""
-Multi-model ensemble (Random Forest, Gradient Boosting, and SVM) for multi-hazard risk prediction.
-"""
-
 import numpy as np
 import joblib
 import os
@@ -9,6 +5,7 @@ from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier,
 from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from sklearn.inspection import permutation_importance
 
 
 MODEL_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "models")
@@ -16,7 +13,7 @@ MODEL_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "models")
 
 def train_model(X, y, feature_names, test_size=0.2, seed=42):
     """
-    Train an Ensemble of 3 models: Random Forest, Gradient Boosting, and SVM.
+    Train an Ensemble of 3 models and calculate feature importance for each.
     
     Returns:
         dict with ensemble model, individual metrics, and ensemble metrics.
@@ -50,61 +47,73 @@ def train_model(X, y, feature_names, test_size=0.2, seed=42):
         voting='soft'
     )
     
-    # Train Ensemble (this fits all underlying models)
-    print("  Training Ensemble Model (RF + GBDT + SVM)...")
+    # Train Ensemble
+    print("  Training Ensemble Models...")
     ensemble.fit(X_train, y_train)
+    
+    # Evaluate and get individual statistics
+    individual_metrics = {}
+    importances = {}
+    
+    # 1. RF Stats
+    rf_model = ensemble.named_estimators_['rf']
+    rf_acc = accuracy_score(y_test, rf_model.predict(X_test))
+    individual_metrics["Random Forest"] = round(float(rf_acc), 4)
+    importances["Random Forest"] = {
+        name: round(float(imp) * 100, 2)
+        for name, imp in sorted(zip(feature_names, rf_model.feature_importances_), key=lambda x: -x[1])
+    }
+    
+    # 2. GB Stats
+    gb_model = ensemble.named_estimators_['gb']
+    gb_acc = accuracy_score(y_test, gb_model.predict(X_test))
+    individual_metrics["Gradient Boosting"] = round(float(gb_acc), 4)
+    importances["Gradient Boosting"] = {
+        name: round(float(imp) * 100, 2)
+        for name, imp in sorted(zip(feature_names, gb_model.feature_importances_), key=lambda x: -x[1])
+    }
+    
+    # 3. SVM Stats (Permutation Importance)
+    sv_model = ensemble.named_estimators_['sv']
+    sv_acc = accuracy_score(y_test, sv_model.predict(X_test))
+    individual_metrics["SVM"] = round(float(sv_acc), 4)
+    
+    print("  Calculating Permutation Importance for SVM (this may take a moment)...")
+    perm_imp = permutation_importance(sv_model, X_test, y_test, n_repeats=5, random_state=seed)
+    importances["SVM"] = {
+        name: round(float(imp) * 100, 2)
+        for name, imp in sorted(zip(feature_names, perm_imp.importances_mean), key=lambda x: -x[1])
+    }
     
     # Evaluate Ensemble
     y_pred = ensemble.predict(X_test)
     accuracy = accuracy_score(y_test, y_pred)
     report = classification_report(y_test, y_pred, output_dict=True)
     
-    # Individual model accuracies (for UI awareness)
-    individual_metrics = {}
-    for name, model in ensemble.named_estimators_.items():
-        m_pred = model.predict(X_test)
-        m_acc = accuracy_score(y_test, m_pred)
-        individual_metrics[name] = round(float(m_acc), 4)
-    
-    # Global Feature importance (from Random Forest as representative)
-    # Note: SVM doesn't have feature_importances_ for RBF kernel
-    rf_model = ensemble.named_estimators_['rf']
-    importances = rf_model.feature_importances_
-    importance_dict = {
-        name: round(float(imp) * 100, 2)
-        for name, imp in sorted(zip(feature_names, importances), key=lambda x: -x[1])
-    }
-    
     return {
         "model": ensemble,
         "accuracy": round(float(accuracy), 4),
         "individual_accuracies": individual_metrics,
         "classification_report": report,
-        "feature_importance": importance_dict,
+        "feature_importance": importances,
         "train_samples": len(X_train),
         "test_samples": len(X_test),
     }
 
 
-def predict_risk(ensemble, label_encoder, X_scaled, feature_names):
+def predict_risk(ensemble, label_encoder, X_scaled, feature_names, individual_accuracies=None):
     """
     Predict risk level using the ensemble and return individual model verdicts.
-    
-    Returns:
-        dict with final prediction, individual model predictions, and feature info
     """
-    # Final Ensemble Prediction
     prediction_encoded = ensemble.predict(X_scaled)
     prediction_label = label_encoder.inverse_transform(prediction_encoded)[0]
     
-    # Probabilities from Ensemble
     probabilities = ensemble.predict_proba(X_scaled)[0]
     prob_dict = {
         label: round(float(prob) * 100, 2)
         for label, prob in zip(label_encoder.classes_, probabilities)
     }
     
-    # Individual model predictions
     model_predictions = {}
     model_names = {"rf": "Random Forest", "gb": "Gradient Boosting", "sv": "SVM"}
     
@@ -113,7 +122,7 @@ def predict_risk(ensemble, label_encoder, X_scaled, feature_names):
         m_label = label_encoder.inverse_transform(m_pred_encoded)[0]
         model_predictions[model_names.get(name, name)] = m_label
     
-    # Feature contribution (from RF)
+    # Feature contribution (from RF as anchor)
     rf_model = ensemble.named_estimators_['rf']
     importances = rf_model.feature_importances_
     feature_values = X_scaled[0]
@@ -130,6 +139,7 @@ def predict_risk(ensemble, label_encoder, X_scaled, feature_names):
         "risk_level": prediction_label,
         "probabilities": prob_dict,
         "model_predictions": model_predictions,
+        "individual_accuracies": individual_accuracies,
         "feature_contributions": contribution_dict,
         "explanation": _generate_explanation(prediction_label, contribution_dict)
     }
@@ -165,12 +175,15 @@ def _generate_explanation(risk_level, contributions):
 
 
 def get_feature_importance(ensemble, feature_names):
-    """Get global feature importance from the combined model (using RF as anchor)."""
+    """Placeholder logic, actual multi-model importance is handled in train_model."""
+    # We return the first model's (RF) importance if called, but the API usually 
+    # gets it from state['training_result']['feature_importance']
     rf_model = ensemble.named_estimators_['rf']
-    importances = rf_model.feature_importances_
     return {
-        name: round(float(imp) * 100, 2)
-        for name, imp in sorted(zip(feature_names, importances), key=lambda x: -x[1])
+        "Random Forest": {
+            name: round(float(imp) * 100, 2)
+            for name, imp in sorted(zip(feature_names, rf_model.feature_importances_), key=lambda x: -x[1])
+        }
     }
 
 

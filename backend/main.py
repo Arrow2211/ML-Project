@@ -252,7 +252,9 @@ async def predict(input_data: PredictionInput):
             features["Longitude"] = city_match["lon"]
     
     X_scaled, feat_names = preprocess_single_input(features, state["scaler"])
-    result = predict_risk(state["model"], state["label_encoder"], X_scaled, feat_names)
+    # Pass individual accuracies so predict_risk can include them in the result for UI highlighting
+    accuracies = state["training_result"].get("individual_accuracies") if state["training_result"] else None
+    result = predict_risk(state["model"], state["label_encoder"], X_scaled, feat_names, accuracies)
     
     return {
         "city": input_data.city or "Custom Location",
@@ -262,12 +264,11 @@ async def predict(input_data: PredictionInput):
 
 @app.get("/api/feature-importance")
 async def feature_importance():
-    """Get global feature importance from trained model."""
-    if state["model"] is None:
+    """Get global feature importance from trained model summary."""
+    if state["training_result"] is None:
         raise HTTPException(status_code=400, detail="Model not trained yet")
     
-    importance = get_feature_importance(state["model"], state["feature_names"])
-    return {"feature_importance": importance}
+    return {"feature_importance": state["training_result"]["feature_importance"]}
 
 
 @app.get("/api/model-info")

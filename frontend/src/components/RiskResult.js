@@ -87,17 +87,30 @@ export default function RiskResult({ result }) {
       {/* Model Consensus */}
       {result.model_predictions && (
         <div className="consensus-section">
-          <h3>🤝 Model Decision Consensus</h3>
+          <div className="consensus-header">
+             <h3>🤝 Model Decision Consensus</h3>
+             {result.individual_accuracies && (
+               <div className="best-model-hint">
+                 🏆 {Object.entries(result.individual_accuracies).reduce((a, b) => a[1] > b[1] ? a : b)[0]} is Top Performer
+               </div>
+             )}
+          </div>
           <div className="consensus-grid">
             {Object.entries(result.model_predictions).map(([model, verdict]) => {
               const vStyle = riskColors[verdict] || riskColors.Low;
               const rgb = verdict === "High" ? "255, 75, 75" : verdict === "Medium" ? "255, 183, 27" : "0, 230, 118";
+              
+              // Determine if this is the 'best' model
+              const isBest = result.individual_accuracies && 
+                             model === Object.entries(result.individual_accuracies).reduce((a, b) => a[1] > b[1] ? a : b)[0];
+
               return (
                 <div 
                   key={model} 
-                  className="consensus-card active" 
+                  className={`consensus-card active ${isBest ? 'best-card' : ''}`} 
                   style={{ "--consensus-color": vStyle.text, "--consensus-color-rgb": rgb }}
                 >
+                  {isBest && <span className="best-badge">TOP PERFORMER</span>}
                   <span className="model-name">{model}</span>
                   <span className="model-verdict">{verdict}</span>
                 </div>
@@ -105,7 +118,7 @@ export default function RiskResult({ result }) {
             })}
           </div>
           <div className="consensus-footer">
-            Final Prediction determined by Ensemble Probability Analysis
+            Outcome verified across ensemble profiles
           </div>
         </div>
       )}

@@ -1,23 +1,47 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Chart, registerables } from "chart.js";
 
 Chart.register(...registerables);
 
-export default function FeatureImportanceChart({ data, title = "Global Feature Importance" }) {
+export default function FeatureImportanceChart({ data, title = "Feature Priority" }) {
   const canvasRef = useRef(null);
   const chartRef = useRef(null);
+  
+  // Normalize data: ensure it's always in { ModelName: { Feature: Value } } format
+  const [normalizedData, setNormalizedData] = useState({});
+  const [activeModel, setActiveModel] = useState("");
 
   useEffect(() => {
-    if (!data || !canvasRef.current) return;
+    if (!data) return;
+
+    // Detect if data is flat (e.g., { Rainfall: 40 }) or nested (e.g., { RF: { Rainfall: 40 } })
+    const firstKey = Object.keys(data)[0];
+    const isNested = firstKey && typeof data[firstKey] === "object";
+
+    const normalized = isNested ? data : { "Ensemble Contribution": data };
+    setNormalizedData(normalized);
+    
+    // Set active model if not set or if current active doesn't exist in new data
+    const firstModel = Object.keys(normalized)[0];
+    if (!activeModel || !normalized[activeModel]) {
+      setActiveModel(firstModel);
+    }
+  }, [data]);
+
+  const modelNames = Object.keys(normalizedData);
+
+  useEffect(() => {
+    if (!normalizedData || !activeModel || !normalizedData[activeModel] || !canvasRef.current) return;
 
     if (chartRef.current) {
       chartRef.current.destroy();
     }
 
-    const labels = Object.keys(data);
-    const values = Object.values(data);
+    const currentData = normalizedData[activeModel];
+    const labels = Object.keys(currentData);
+    const values = Object.values(currentData);
 
     const colors = [
       "#00e5ff", "#7c4dff", "#ff6e40", "#ffab00",
@@ -69,6 +93,7 @@ export default function FeatureImportanceChart({ data, title = "Global Feature I
               color: "#cbd5e1",
               font: { size: 13, family: "'Inter', sans-serif" },
             },
+            suggestedMax: 40,
           },
           y: {
             grid: { display: false },
@@ -76,7 +101,7 @@ export default function FeatureImportanceChart({ data, title = "Global Feature I
           },
         },
         animation: {
-          duration: 1200,
+          duration: 800,
           easing: "easeOutQuart",
         },
       },
@@ -85,18 +110,35 @@ export default function FeatureImportanceChart({ data, title = "Global Feature I
     return () => {
       if (chartRef.current) chartRef.current.destroy();
     };
-  }, [data]);
+  }, [normalizedData, activeModel]);
 
   if (!data) return null;
 
   return (
     <div className="chart-card">
-      <h3>📈 {title}</h3>
+      <div className="chart-header-row">
+        <h3>📈 {title}</h3>
+        {modelNames.length > 1 && (
+          <div className="model-tabs">
+            {modelNames.map((name) => (
+              <button
+                key={name}
+                className={`model-tab ${activeModel === name ? "active" : ""}`}
+                onClick={() => setActiveModel(name)}
+              >
+                {name}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+      
       <p className="chart-subtitle">
-        {title.includes("Global") 
-          ? "How much each feature generally affects the model's decisions." 
-          : `Main factors that influenced the risk for ${title.split(" ")[0]}.`}
+        {activeModel === "SVM" 
+          ? "Permutation Importance: How much each feature affects SVM accuracy."
+          : `Model-specific feature weightage for ${activeModel}.`}
       </p>
+      
       <div className="chart-container" style={{ height: "380px" }}>
         <canvas ref={canvasRef} id="feature-importance-chart" />
       </div>
