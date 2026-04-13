@@ -410,7 +410,114 @@ def clear_cache():
 
 
 if __name__ == "__main__":
-    df = build_dataset("2023-01-01", "2023-12-31")
-    print(f"\nDataset shape: {df.shape}")
-    print(f"Columns: {df.columns.tolist()}")
-    print(f"\nSample:\n{df.head()}")
+    import argparse
+    import json
+    from geopy.geocoders import Nominatim
+    
+    parser = argparse.ArgumentParser(description="Multi-Hazard Data Fetcher & City Manager")
+    parser.add_argument("--build", action="store_true", help="Build the full risk dataset")
+    parser.add_argument("--update-states", action="store_true", help="Fix missing state metadata in JSON")
+    parser.add_argument("--sync-mh", action="store_true", help="Sync Maharashtra cities from external JSON")
+    parser.add_argument("--geocode", type=str, help="Geocode a comma-separated list of new cities")
+    parser.add_argument("--region", type=str, default="Maharashtra", help="Region for geocoding (default: Maharashtra)")
+    
+    args = parser.parse_args()
+    
+    if args.update_states:
+        # Integrated logic from legacy add_states.py
+        state_mapping = {
+            'Delhi': 'Delhi', 'Chandigarh': 'Chandigarh', 'Goa': 'Goa', 'Pondicherry': 'Puducherry',
+            'Srinagar': 'Jammu & Kashmir', 'Jammu': 'Jammu & Kashmir', 'Leh': 'Ladakh', 'Kargil': 'Ladakh',
+            'Jaipur': 'Rajasthan', 'Jodhpur': 'Rajasthan', 'Udaipur': 'Rajasthan', 'Kota': 'Rajasthan',
+            'Ahmedabad': 'Gujarat', 'Surat': 'Gujarat', 'Rajkot': 'Gujarat', 'Vadodara': 'Gujarat',
+            'Bhopal': 'Madhya Pradesh', 'Indore': 'Madhya Pradesh', 'Gwalior': 'Madhya Pradesh',
+            'Kolkata': 'West Bengal', 'Howrah': 'West Bengal', 'Darjeeling': 'West Bengal',
+            'Bangalore': 'Karnataka', 'Mysore': 'Karnataka', 'Mangalore': 'Karnataka',
+            'Chennai': 'Tamil Nadu', 'Coimbatore': 'Tamil Nadu', 'Madurai': 'Tamil Nadu',
+            'Thiruvananthapuram': 'Kerala', 'Kochi': 'Kerala', 'Kozhikode': 'Kerala',
+            'Hyderabad': 'Telangana', 'Lucknow': 'Uttar Pradesh', 'Patna': 'Bihar',
+            'Guwahati': 'Assam', 'Bhubaneswar': 'Odisha', 'Shillong': 'Meghalaya'
+        }
+        
+        cities = load_indian_cities()
+        updated = 0
+        for city in cities:
+            if "state" not in city or city["state"] == "Unknown":
+                city["state"] = state_mapping.get(city["city"], "Maharashtra")
+                updated += 1
+        
+        if updated > 0:
+            with open(CITIES_METADATA_FILE, "w", encoding="utf-8") as f:
+                json.dump(cities, f, indent=4)
+            print(f"SUCCESS: Updated state metadata for {updated} cities.")
+        else:
+            print("No updates needed for states.")
+
+    elif args.sync_mh:
+        # Integrated logic from legacy get_mh.py
+        url = 'https://raw.githubusercontent.com/nshntarora/Indian-Cities-JSON/master/cities.json'
+        print(f"Syncing Maharashtra cities from {url}...")
+        try:
+            resp = requests.get(url, timeout=20)
+            remote_cities = resp.json()
+            mh_cities = [c for c in remote_cities if c.get('state') == 'Maharashtra']
+            
+            existing_names = {c["city"].lower() for c in load_indian_cities()}
+            new_list = load_indian_cities()
+            added = 0
+            
+            for c in mh_cities:
+                name = c['name']
+                if name.lower() not in existing_names:
+                    lat, lon = float(c['lat']), float(c['lng'])
+                    zone = 'coastal_west' if lon < 73.5 else ('inland_west' if lon < 76.0 else 'inland_central')
+                    new_list.append({"city": name, "state": "Maharashtra", "lat": lat, "lon": lon, "zone": zone})
+                    added += 1
+            
+            if added > 0:
+                with open(CITIES_METADATA_FILE, "w", encoding="utf-8") as f:
+                    json.dump(new_list, f, indent=4)
+                print(f"SUCCESS: Imported {added} new Maharashtra cities.")
+            else:
+                print("All cities already present.")
+        except Exception as e:
+            print(f"Sync failed: {e}")
+
+    elif args.geocode:
+        # Integrated logic from legacy geocode_mh.py, fetch_more.py, fetch_three.py
+        geolocator = Nominatim(user_agent="disaster_risk_city_manager")
+        city_names = [c.strip() for c in args.geocode.split(",")]
+        
+        existing_cities = load_indian_cities()
+        existing_names = {c["city"].lower() for c in existing_cities}
+        added = 0
+        
+        for name in city_names:
+            if name.lower() in existing_names:
+                print(f"Skipping {name}, already exists.")
+                continue
+            
+            print(f"Geocoding {name}...")
+            try:
+                location = geolocator.geocode(f"{name}, {args.region}, India")
+                if location:
+                    lat, lon = round(location.latitude, 4), round(location.longitude, 4)
+                    zone = 'coastal_west' if lon < 73.5 else ('inland_west' if lon < 76.0 else 'inland_central')
+                    existing_cities.append({"city": name, "state": args.region, "lat": lat, "lon": lon, "zone": zone})
+                    added += 1
+                    time.sleep(1) # Nominatim rate limit
+                else:
+                    print(f"Could not find coordinates for {name}")
+            except Exception as e:
+                print(f"Error geocoding {name}: {e}")
+        
+        if added > 0:
+            with open(CITIES_METADATA_FILE, "w", encoding="utf-8") as f:
+                json.dump(existing_cities, f, indent=4)
+            print(f"SUCCESS: Added {added} cities via geocoding.")
+
+    elif args.build:
+        df = build_dataset("2023-01-01", "2023-12-31")
+        print(f"\nDataset shape: {df.shape}")
+    else:
+        parser.print_help()
