@@ -1,0 +1,78 @@
+{
+    "accuracy": 1.0,
+    "individual_accuracies": {
+        "Random Forest": 1.0,
+        "Gradient Boosting": 1.0,
+        "SVM": 0.8649
+    },
+    "classification_report": {
+        "0": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 21.0
+        },
+        "1": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 2.0
+        },
+        "2": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 51.0
+        },
+        "accuracy": 1.0,
+        "macro avg": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 74.0
+        },
+        "weighted avg": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 74.0
+        }
+    },
+    "feature_importance": {
+        "Random Forest": {
+            "Rainfall": 25.82,
+            "Temperature": 24.4,
+            "Cyclone_Risk": 12.49,
+            "Humidity": 10.8,
+            "Wind_Speed": 9.08,
+            "Longitude": 5.98,
+            "Drought_Index": 3.96,
+            "Latitude": 3.95,
+            "Earthquake_Frequency": 3.51
+        },
+        "Gradient Boosting": {
+            "Rainfall": 49.97,
+            "Wind_Speed": 18.92,
+            "Temperature": 11.19,
+            "Cyclone_Risk": 6.91,
+            "Drought_Index": 6.17,
+            "Earthquake_Frequency": 3.72,
+            "Longitude": 1.98,
+            "Humidity": 1.14,
+            "Latitude": 0.0
+        },
+        "SVM": {
+            "Rainfall": 26.49,
+            "Humidity": 10.81,
+            "Temperature": 5.41,
+            "Cyclone_Risk": 4.86,
+            "Longitude": 4.32,
+            "Wind_Speed": 2.16,
+            "Drought_Index": 1.62,
+            "Earthquake_Frequency": 0.81,
+            "Latitude": -1.89
+        }
+    },
+    "train_samples": 295,
+    "test_samples": 74
+}

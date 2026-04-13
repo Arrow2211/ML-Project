@@ -187,8 +187,8 @@ def get_feature_importance(ensemble, feature_names):
     }
 
 
-def save_model(ensemble, scaler, label_encoder, feature_names, path=None):
-    """Save model artifacts to disk."""
+def save_model(ensemble, scaler, label_encoder, feature_names, metadata=None, path=None):
+    """Save model artifacts and optional metadata to disk."""
     os.makedirs(MODEL_DIR, exist_ok=True)
     path = path or MODEL_DIR
     
@@ -196,15 +196,34 @@ def save_model(ensemble, scaler, label_encoder, feature_names, path=None):
     joblib.dump(scaler, os.path.join(path, "scaler.joblib"))
     joblib.dump(label_encoder, os.path.join(path, "label_encoder.joblib"))
     joblib.dump(feature_names, os.path.join(path, "feature_names.joblib"))
+    
+    # Save metadata (accuracies, importance records)
+    if metadata:
+        import json
+        with open(os.path.join(path, "metadata.json"), "w", encoding="utf-8") as f:
+            json.dump(metadata, f, indent=4)
 
 
 def load_model(path=None):
-    """Load model artifacts from disk."""
+    """Load model artifacts and metadata from disk."""
     path = path or MODEL_DIR
     
+    if not os.path.exists(os.path.join(path, "model.joblib")):
+        return None, None, None, None, None
+        
     ensemble = joblib.load(os.path.join(path, "model.joblib"))
     scaler = joblib.load(os.path.join(path, "scaler.joblib"))
     label_encoder = joblib.load(os.path.join(path, "label_encoder.joblib"))
     feature_names = joblib.load(os.path.join(path, "feature_names.joblib"))
     
-    return ensemble, scaler, label_encoder, feature_names
+    metadata = None
+    meta_path = os.path.join(path, "metadata.json")
+    if os.path.exists(meta_path):
+        import json
+        try:
+            with open(meta_path, "r", encoding="utf-8") as f:
+                metadata = json.load(f)
+        except Exception as e:
+            print(f"  ⚠ Failed to load metadata: {e}")
+            
+    return ensemble, scaler, label_encoder, feature_names, metadata

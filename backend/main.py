@@ -44,12 +44,23 @@ state = {
 
 @app.on_event("startup")
 async def startup():
-    """Start model training in background."""
+    """Load existing model if available and start re-training in background."""
     print("FastAPI server is starting up...")
-    # Already imported at top level, no need for redundant re-imports
-    # Using absolute imports at top level avoids the 'relative import' error on Render
     
-    # We use a simple background execution for the initial fetch
+    # 1. Try to load existing model and metadata for instant availability
+    try:
+        model, scaler, le, feat_names, metadata = load_model()
+        if model:
+            state["model"] = model
+            state["scaler"] = scaler
+            state["label_encoder"] = le
+            state["feature_names"] = feat_names
+            state["training_result"] = metadata
+            print("STARTUP: Existing model and metadata loaded from disk.")
+    except Exception as e:
+        print(f"  WARNING: Failed to load initial model: {e}")
+
+    # 2. Start background training task to ensure data is fresh
     import threading
     def train_task():
         print("Background: Fetching real government data and training model...")
@@ -57,18 +68,14 @@ async def startup():
             df = build_dataset(start_date="2023-01-01", end_date="2023-12-31", use_cache=True)
             if df.empty:
                 state["training_error"] = "No data available"
-                print("Background: No data available. Server running without trained model.")
                 return
                 
             state["dataset"] = df
             X, y, scaler, le, feat_names = preprocess(df, is_training=True)
             result = train_model(X, y, feat_names)
             
-            state["model"] = result["model"]
-            state["scaler"] = scaler
-            state["label_encoder"] = le
-            state["feature_names"] = feat_names
-            state["training_result"] = {
+            # Update state
+            training_meta = {
                 "accuracy": result["accuracy"],
                 "individual_accuracies": result["individual_accuracies"],
                 "classification_report": result["classification_report"],
@@ -76,8 +83,16 @@ async def startup():
                 "train_samples": result["train_samples"],
                 "test_samples": result["test_samples"],
             }
-            save_model(result["model"], scaler, le, feat_names)
-            print(f"DONE Background: Models trained — Accuracy: {result['accuracy']:.4f}")
+            
+            state["model"] = result["model"]
+            state["scaler"] = scaler
+            state["label_encoder"] = le
+            state["feature_names"] = feat_names
+            state["training_result"] = training_meta
+            
+            # Persist to disk including metadata
+            save_model(result["model"], scaler, le, feat_names, metadata=training_meta)
+            print(f"DONE Background: Models trained and persisted — Accuracy: {result['accuracy']:.4f}")
         except Exception as e:
             state["training_error"] = str(e)
             print(f"ERROR Background training failed: {e}")

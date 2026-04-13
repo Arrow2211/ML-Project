@@ -19,9 +19,9 @@ dist/
 backend/data/*.csv
 !backend/data/baseline_data.csv
 !backend/data/dataset_cache.csv
-backend/models/
-*.joblib
-*.pkl
+# We allow models and metadata for instant deployment availability
+!backend/models/*.joblib
+!backend/models/*.json
 
 # OS files
 .DS_Store

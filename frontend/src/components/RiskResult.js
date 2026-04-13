@@ -89,7 +89,7 @@ export default function RiskResult({ result }) {
         <div className="consensus-section">
           <div className="consensus-header">
              <h3>🤝 Model Decision Consensus</h3>
-             {result.individual_accuracies && (
+             {result.individual_accuracies && Object.keys(result.individual_accuracies).length > 0 && (
                <div className="best-model-hint">
                  🏆 {Object.entries(result.individual_accuracies).reduce((a, b) => a[1] > b[1] ? a : b)[0]} is Top Performer
                </div>
@@ -102,6 +102,7 @@ export default function RiskResult({ result }) {
               
               // Determine if this is the 'best' model
               const isBest = result.individual_accuracies && 
+                             Object.keys(result.individual_accuracies).length > 0 &&
                              model === Object.entries(result.individual_accuracies).reduce((a, b) => a[1] > b[1] ? a : b)[0];
 
               return (
