@@ -159,7 +159,7 @@ export default function PredictionForm({ onResult, onLoading }) {
               {cities
                 .filter((c) => c.state === selectedState)
                 .map((c) => (
-                  <option key={c.city} value={c.city}>
+                  <option key={`${c.city}-${c.lat}-${c.lon}`} value={c.city}>
                     {c.city}
                   </option>
                 ))}

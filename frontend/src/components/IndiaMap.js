@@ -68,7 +68,7 @@ export default function IndiaMap() {
 
             return (
               <g
-                key={city.city}
+                key={`${city.city}-${city.lat}-${city.lon}`}
                 onMouseEnter={() => setHoveredCity(city.city)}
                 onMouseLeave={() => setHoveredCity(null)}
                 style={{ cursor: "pointer" }}
