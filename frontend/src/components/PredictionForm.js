@@ -23,6 +23,7 @@ export default function PredictionForm({ onResult, onLoading }) {
     Object.fromEntries(FIELDS.map((f) => [f.name, f.default]))
   );
   const [error, setError] = useState(null);
+  const [hasNoData, setHasNoData] = useState(false);
 
   useEffect(() => {
     fetchCities()
@@ -136,6 +137,7 @@ export default function PredictionForm({ onResult, onLoading }) {
                 if (cityName) {
                   const cityData = cities.find((c) => c.city === cityName);
                   if (cityData && cityData.Temperature !== undefined) {
+                    setHasNoData(false);
                     setFormData((prev) => ({
                       ...prev,
                       temperature: cityData.Temperature,
@@ -148,8 +150,11 @@ export default function PredictionForm({ onResult, onLoading }) {
                     }));
                   } else {
                     // Reset to defaults if no data available yet for this city
+                    setHasNoData(true);
                     setFormData(Object.fromEntries(FIELDS.map((f) => [f.name, f.default])));
                   }
+                } else {
+                  setHasNoData(false);
                 }
               }}
               required={mode === "city"}
@@ -171,6 +176,13 @@ export default function PredictionForm({ onResult, onLoading }) {
       {error && (
         <div className="form-error" style={{ padding: "0.8rem", backgroundColor: "#ffefef", color: "#d32f2f", borderRadius: "8px", marginBottom: "1.5rem", border: "1px solid #ffcfcf", fontSize: "0.9rem", display: "flex", gap: "0.5rem", alignItems: "center" }}>
           <span>⚠️</span> {error}
+        </div>
+      )}
+
+      {hasNoData && !loading && (
+        <div className="info-toast" style={{ padding: "0.8rem", backgroundColor: "#e8f4fd", color: "#0277bd", borderRadius: "8px", marginBottom: "1.5rem", border: "1px solid #b3e5fc", fontSize: "0.85rem", display: "flex", gap: "0.5rem", alignItems: "center" }}>
+          <span>💡</span> 
+          <span>Historical data for this city is still being synchronized. Showing national averages.</span>
         </div>
       )}
 

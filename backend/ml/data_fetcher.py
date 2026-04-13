@@ -378,6 +378,12 @@ def build_dataset(start_date="2023-01-01", end_date="2023-12-31", use_cache=True
     # Group by City to get 1 representative row per city
     df_agg = df.groupby('City').agg({k: v for k, v in agg_map.items() if k in df.columns}).reset_index()
     
+    # ─── Add State/Zone Metadata ──────────────────────────────────────
+    # Mapping from metadata
+    meta_map = {c["city"]: c for c in INDIAN_CITIES}
+    df_agg["State"] = df_agg["City"].map(lambda x: meta_map.get(x, {}).get("state", "Unknown"))
+    df_agg["Zone"] = df_agg["City"].map(lambda x: meta_map.get(x, {}).get("zone", "Unknown"))
+    
     # ─── Data Attribution (Authentication) ────────────────────────────
     # Citing official Government sources (IMD/NCS)
     df_agg["Source"] = "IMD-NCS Official Data Link"
