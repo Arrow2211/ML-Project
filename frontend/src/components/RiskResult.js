@@ -83,6 +83,32 @@ export default function RiskResult({ result }) {
           <p>{result.explanation}</p>
         </div>
       )}
+
+      {/* Model Consensus */}
+      {result.model_predictions && (
+        <div className="consensus-section">
+          <h3>🤝 Model Decision Consensus</h3>
+          <div className="consensus-grid">
+            {Object.entries(result.model_predictions).map(([model, verdict]) => {
+              const vStyle = riskColors[verdict] || riskColors.Low;
+              const rgb = verdict === "High" ? "255, 75, 75" : verdict === "Medium" ? "255, 183, 27" : "0, 230, 118";
+              return (
+                <div 
+                  key={model} 
+                  className="consensus-card active" 
+                  style={{ "--consensus-color": vStyle.text, "--consensus-color-rgb": rgb }}
+                >
+                  <span className="model-name">{model}</span>
+                  <span className="model-verdict">{verdict}</span>
+                </div>
+              );
+            })}
+          </div>
+          <div className="consensus-footer">
+            Final Prediction determined by Ensemble Probability Analysis
+          </div>
+        </div>
+      )}
     </div>
   );
 }

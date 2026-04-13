@@ -30,7 +30,7 @@ def load_indian_cities():
             with open(CITIES_METADATA_FILE, "r", encoding="utf-8") as f:
                 return json.load(f)
         except Exception as e:
-            print(f"  ⚠ Error loading {CITIES_METADATA_FILE}: {e}")
+            print(f"  Error loading {CITIES_METADATA_FILE}: {e}")
     
     # Minimal fallback
     return [{"city": "Mumbai", "lat": 19.076, "lon": 72.8777, "state": "Maharashtra", "zone": "coastal_west"}]
@@ -91,7 +91,7 @@ def fetch_weather_data(city_info, start_date, end_date):
         return df
         
     except Exception as e:
-        print(f"  ⚠ Weather fetch failed for {city_info['city']}: {e}")
+        print(f"  Weather fetch failed for {city_info['city']}: {e}")
         return pd.DataFrame()
 
 
@@ -125,11 +125,11 @@ def fetch_earthquake_data(start_date, end_date, min_magnitude=3.0):
         from io import StringIO
         eq_df = pd.read_csv(StringIO(resp.text))
         
-        print(f"  📊 Fetched {len(eq_df)} earthquakes (M≥{min_magnitude}) in India region")
+        print(f"  Fetched {len(eq_df)} earthquakes (M>={min_magnitude}) in India region")
         return eq_df
         
     except Exception as e:
-        print(f"  ⚠ Earthquake fetch failed: {e}")
+        print(f"  Earthquake fetch failed: {e}")
         return pd.DataFrame()
 
 
@@ -295,21 +295,21 @@ def build_dataset(start_date="2023-01-01", end_date="2023-12-31", use_cache=True
     
     # Check cache
     if use_cache and os.path.exists(CACHE_FILE):
-        print("📁 Loading cached dataset...")
+        print("Loading cached dataset...")
         df = pd.read_csv(CACHE_FILE)
         if len(df) > 0:
-            print(f"  ✅ Loaded {len(df)} rows from cache")
+            print(f"  Loaded {len(df)} rows from cache")
             return df
     
     # Fallback to committed baseline if cache is missing (useful for first deploy on Render)
     if use_cache and os.path.exists(BASELINE_FILE):
-        print(f"📁 Cache missing. Loading baseline dataset for instant start...")
+        print(f"Cache missing. Loading baseline dataset for instant start...")
         df = pd.read_csv(BASELINE_FILE)
         if len(df) > 0:
-            print(f"  ✅ Loaded {len(df)} cities from baseline")
+            print(f"  Loaded {len(df)} cities from baseline")
             return df
     
-    print(f"🌐 Fetching real data from government sources ({start_date} to {end_date})...")
+    print(f"Fetching real data from government sources ({start_date} to {end_date})...")
     print(f"   Sources: Open-Meteo (ERA5/IMD), USGS Earthquake Catalog")
     
     # 1. Fetch earthquake data (one call for all of India)
@@ -321,7 +321,7 @@ def build_dataset(start_date="2023-01-01", end_date="2023-12-31", use_cache=True
     total_cities = len(INDIAN_CITIES)
     
     for i, city_info in enumerate(INDIAN_CITIES):
-        print(f"\n🌤️  [{i+1}/{total_cities}] Fetching weather for {city_info['city']}...")
+        print(f"\n[{i+1}/{total_cities}] Fetching weather for {city_info['city']}...")
         
         weather_df = fetch_weather_data(city_info, start_date, end_date)
         
@@ -406,7 +406,7 @@ def clear_cache():
     """Clear the cached dataset to force re-fetch."""
     if os.path.exists(CACHE_FILE):
         os.remove(CACHE_FILE)
-        print("🗑️  Cache cleared")
+        print("Cache cleared")
 
 
 if __name__ == "__main__":

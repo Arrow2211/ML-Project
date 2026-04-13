@@ -45,19 +45,19 @@ state = {
 @app.on_event("startup")
 async def startup():
     """Start model training in background."""
-    print("🚀 FastAPI server is starting up...")
+    print("FastAPI server is starting up...")
     # Already imported at top level, no need for redundant re-imports
     # Using absolute imports at top level avoids the 'relative import' error on Render
     
     # We use a simple background execution for the initial fetch
     import threading
     def train_task():
-        print("🌍 Background: Fetching real government data and training model...")
+        print("Background: Fetching real government data and training model...")
         try:
             df = build_dataset(start_date="2023-01-01", end_date="2023-12-31", use_cache=True)
             if df.empty:
                 state["training_error"] = "No data available"
-                print("⚠ Background: No data available. Server running without trained model.")
+                print("Background: No data available. Server running without trained model.")
                 return
                 
             state["dataset"] = df
@@ -70,17 +70,17 @@ async def startup():
             state["feature_names"] = feat_names
             state["training_result"] = {
                 "accuracy": result["accuracy"],
+                "individual_accuracies": result["individual_accuracies"],
                 "classification_report": result["classification_report"],
-                "confusion_matrix": result["confusion_matrix"],
                 "feature_importance": result["feature_importance"],
                 "train_samples": result["train_samples"],
                 "test_samples": result["test_samples"],
             }
             save_model(result["model"], scaler, le, feat_names)
-            print(f"✅ Background: Model trained — Accuracy: {result['accuracy']:.4f}")
+            print(f"DONE Background: Models trained — Accuracy: {result['accuracy']:.4f}")
         except Exception as e:
             state["training_error"] = str(e)
-            print(f"❌ Background training failed: {e}")
+            print(f"ERROR Background training failed: {e}")
 
     thread = threading.Thread(target=train_task)
     thread.start()
@@ -206,8 +206,8 @@ async def train():
     state["feature_names"] = feat_names
     state["training_result"] = {
         "accuracy": result["accuracy"],
+        "individual_accuracies": result["individual_accuracies"],
         "classification_report": result["classification_report"],
-        "confusion_matrix": result["confusion_matrix"],
         "feature_importance": result["feature_importance"],
         "train_samples": result["train_samples"],
         "test_samples": result["test_samples"],
@@ -216,8 +216,9 @@ async def train():
     save_model(result["model"], scaler, le, feat_names)
     
     return {
-        "message": "Model trained successfully",
+        "message": "Ensemble models trained successfully",
         "accuracy": result["accuracy"],
+        "individual_accuracies": result["individual_accuracies"],
         "feature_importance": result["feature_importance"],
         "train_samples": result["train_samples"],
         "test_samples": result["test_samples"],

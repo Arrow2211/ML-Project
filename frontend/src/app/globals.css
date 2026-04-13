@@ -676,6 +676,68 @@ body {
   line-height: 1.7;
 }
 
+/* Consensus Grid */
+.consensus-section {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.consensus-section h3 {
+  font-size: 0.95rem;
+  margin-bottom: 16px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.consensus-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.consensus-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.consensus-card.active {
+  background: rgba(var(--consensus-color-rgb), 0.08);
+  border-color: rgba(var(--consensus-color-rgb), 0.3);
+}
+
+.model-name {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  display: block;
+}
+
+.model-verdict {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--consensus-color);
+}
+
+.consensus-footer {
+  text-align: center;
+  padding: 10px;
+  background: rgba(0, 229, 255, 0.05);
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  color: var(--accent-cyan);
+  border: 1px dashed rgba(0, 229, 255, 0.2);
+}
+
 /* ─── Charts ───────────────────────────────────────── */
 .charts-grid {
   display: grid;
