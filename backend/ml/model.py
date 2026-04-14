@@ -104,50 +104,71 @@ def train_model(X, y, feature_names, test_size=0.2, seed=42):
 def predict_risk(ensemble, label_encoder, X_scaled, feature_names, individual_accuracies=None):
     """
     Predict risk level using the ensemble and return individual model verdicts
-    with improved directional feature contribution logic.
+    with improved directional feature contribution and consensus analysis.
     """
     prediction_encoded = ensemble.predict(X_scaled)
-    prediction_label = label_encoder.inverse_transform(prediction_encoded)[0]
-    
+    # Get probability distribution
     probabilities = ensemble.predict_proba(X_scaled)[0]
+    prediction_idx = np.argmax(probabilities)
+    prediction_label = label_encoder.inverse_transform([prediction_idx])[0]
+    
     prob_dict = {
         label: round(float(prob) * 100, 2)
         for label, prob in zip(label_encoder.classes_, probabilities)
     }
     
+    # Analyze Consensus and Confidence
+    winning_prob = probabilities[prediction_idx]
+    remaining_probs = np.delete(probabilities, prediction_idx)
+    next_best_prob = np.max(remaining_probs) if len(remaining_probs) > 0 else 0
+    
+    # Confidence score: Ratio of winning prob vs next best
+    confidence_ratio = winning_prob / next_best_prob if next_best_prob > 0 else 2.0
+    if confidence_ratio > 1.5:
+        confidence_level = "High"
+    elif confidence_ratio > 1.2:
+        confidence_level = "Moderate"
+    else:
+        confidence_level = "Low"
+    
     model_predictions = {}
     model_names = {"rf": "Random Forest", "gb": "Gradient Boosting", "sv": "SVM"}
     
+    top_performer_name = "Random Forest" # Default
+    if individual_accuracies:
+        top_performer_name = max(individual_accuracies, key=individual_accuracies.get)
+        
+    top_performer_conflict = False
+    top_performer_verdict = ""
+    
     for name, model in ensemble.named_estimators_.items():
+        m_name = model_names.get(name, name)
         m_pred_encoded = model.predict(X_scaled)
         m_label = label_encoder.inverse_transform(m_pred_encoded)[0]
-        model_predictions[model_names.get(name, name)] = m_label
+        model_predictions[m_name] = m_label
+        
+        if m_name == top_performer_name and m_label != prediction_label:
+            top_performer_conflict = True
+            top_performer_verdict = m_label
     
     # --- Corrected Directional Feature Contribution Logic ---
     rf_model = ensemble.named_estimators_['rf']
     importances = rf_model.feature_importances_
     f_vals = X_scaled[0]
     
-    # We want to show what is DRIVING the specific prediction.
     if prediction_label in ["High", "Medium"]:
-        # Reasons for High Risk: Features that are GREATER than their average 
-        # (Except Pressure, where lower is riskier)
         directional_vals = np.array([
             -val if name == "Surface_Pressure" else val 
             for name, val in zip(feature_names, f_vals)
         ])
-        # Only count positive deviations as "contributing" to the High Risk status
         raw_contributions = importances * np.maximum(0, directional_vals)
     else:
-        # Reasons for Low Risk: Features that are LOWER than their average
-        # (Except Pressure, where higher is safer)
         directional_vals = np.array([
             val if name == "Surface_Pressure" else -val 
             for name, val in zip(feature_names, f_vals)
         ])
         raw_contributions = importances * np.maximum(0, directional_vals)
     
-    # Fallback: if no feature stands out directionally, use absolute deviation
     if raw_contributions.sum() == 0:
         raw_contributions = importances * np.abs(f_vals)
         
@@ -161,16 +182,24 @@ def predict_risk(ensemble, label_encoder, X_scaled, feature_names, individual_ac
     
     return {
         "risk_level": prediction_label,
+        "confidence_level": confidence_level,
         "probabilities": prob_dict,
         "model_predictions": model_predictions,
         "individual_accuracies": individual_accuracies,
         "feature_contributions": contribution_dict,
-        "explanation": _generate_explanation(prediction_label, contribution_dict)
+        "explanation": _generate_explanation(
+            prediction_label, 
+            contribution_dict, 
+            confidence_level, 
+            top_performer_conflict, 
+            top_performer_name, 
+            top_performer_verdict
+        )
     }
 
 
-def _generate_explanation(risk_level, contributions):
-    """Generate a human-readable explanation for the prediction."""
+def _generate_explanation(risk_level, contributions, confidence, conflict, tp_name, tp_verdict):
+    """Generate a human-readable explanation with consensus awareness."""
     top_features = list(contributions.items())[:3]
     
     feature_descriptions = {
@@ -191,11 +220,24 @@ def _generate_explanation(risk_level, contributions):
         parts.append(f"{desc} ({pct}%)")
     
     if risk_level == "High":
-        return f"Warning: High risk primarily driven by {parts[0]} and {parts[1]}. Urgent precautionary measures are recommended."
+        base_exp = f"Warning: High risk primarily driven by {parts[0]} and {parts[1]}. Urgent precautionary measures are recommended."
     elif risk_level == "Medium":
-        return f"Moderate risk detected. Key factors include {parts[0]}. Monitoring of localized weather updates is advised."
+        base_exp = f"Moderate risk detected. Key factors include {parts[0]}. Monitoring of localized weather updates is advised."
     else:
-        return f"Low hazard risk. Safety indicators for {parts[0]} are currently stable and well within normal limits."
+        base_exp = f"Low hazard risk. Safety indicators for {parts[0]} are currently stable and well within normal limits."
+        
+    # Add Consensus Note
+    consensus_note = ""
+    if confidence == "Low":
+        consensus_note = f"\n\n[Consensus Note]: Statistical variance is high for this input. "
+        if conflict:
+            consensus_note += f"While the {tp_name} suggests {tp_verdict}, the weighted ensemble consensus favors {risk_level} Risk based on broader indicators."
+        else:
+            consensus_note += "Individual models show divergent results; the final verdict represents the weighted average of all perspectives."
+    elif confidence == "Moderate" and conflict:
+        consensus_note = f"\n\n[Consensus Note]: Historically accurate {tp_name} indicates {tp_verdict}, but aggregate features currently align more closely with {risk_level} Risk."
+        
+    return base_exp + consensus_note
 
 
 def get_feature_importance(ensemble, feature_names):
