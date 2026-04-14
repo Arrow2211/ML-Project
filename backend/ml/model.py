@@ -103,7 +103,8 @@ def train_model(X, y, feature_names, test_size=0.2, seed=42):
 
 def predict_risk(ensemble, label_encoder, X_scaled, feature_names, individual_accuracies=None):
     """
-    Predict risk level using the ensemble and return individual model verdicts.
+    Predict risk level using the ensemble and return individual model verdicts
+    with improved directional feature contribution logic.
     """
     prediction_encoded = ensemble.predict(X_scaled)
     prediction_label = label_encoder.inverse_transform(prediction_encoded)[0]
@@ -122,11 +123,34 @@ def predict_risk(ensemble, label_encoder, X_scaled, feature_names, individual_ac
         m_label = label_encoder.inverse_transform(m_pred_encoded)[0]
         model_predictions[model_names.get(name, name)] = m_label
     
-    # Feature contribution (from RF as anchor)
+    # --- Corrected Directional Feature Contribution Logic ---
     rf_model = ensemble.named_estimators_['rf']
     importances = rf_model.feature_importances_
-    feature_values = X_scaled[0]
-    raw_contributions = importances * np.abs(feature_values)
+    f_vals = X_scaled[0]
+    
+    # We want to show what is DRIVING the specific prediction.
+    if prediction_label in ["High", "Medium"]:
+        # Reasons for High Risk: Features that are GREATER than their average 
+        # (Except Pressure, where lower is riskier)
+        directional_vals = np.array([
+            -val if name == "Surface_Pressure" else val 
+            for name, val in zip(feature_names, f_vals)
+        ])
+        # Only count positive deviations as "contributing" to the High Risk status
+        raw_contributions = importances * np.maximum(0, directional_vals)
+    else:
+        # Reasons for Low Risk: Features that are LOWER than their average
+        # (Except Pressure, where higher is safer)
+        directional_vals = np.array([
+            val if name == "Surface_Pressure" else -val 
+            for name, val in zip(feature_names, f_vals)
+        ])
+        raw_contributions = importances * np.maximum(0, directional_vals)
+    
+    # Fallback: if no feature stands out directionally, use absolute deviation
+    if raw_contributions.sum() == 0:
+        raw_contributions = importances * np.abs(f_vals)
+        
     total = raw_contributions.sum()
     contributions = raw_contributions / total if total > 0 else importances
     
@@ -150,15 +174,15 @@ def _generate_explanation(risk_level, contributions):
     top_features = list(contributions.items())[:3]
     
     feature_descriptions = {
-        "Rainfall": "rainfall levels",
-        "Wind_Speed": "wind speed",
-        "Earthquake_Frequency": "earthquake frequency",
-        "Cyclone_Risk": "cyclone risk",
-        "Drought_Index": "drought conditions",
-        "Temperature": "temperature",
-        "Humidity": "humidity levels",
-        "Latitude": "latitude",
-        "Longitude": "longitude",
+        "Rainfall": "unusually high rainfall",
+        "Wind_Speed": "elevated wind speeds",
+        "Earthquake_Frequency": "seismic activity history",
+        "Cyclone_Risk": "cyclonic storm indicators",
+        "Drought_Index": "drought/rainfall deficit",
+        "Temperature": "temperature anomalies",
+        "Humidity": "high humidity levels",
+        "Latitude": "geographic positioning",
+        "Longitude": "regional indicators",
     }
     
     parts = []
@@ -167,11 +191,11 @@ def _generate_explanation(risk_level, contributions):
         parts.append(f"{desc} ({pct}%)")
     
     if risk_level == "High":
-        return f"Warning: High risk primarily due to {parts[0]} and {parts[1]}. Precautionary measures are highly recommended."
+        return f"Warning: High risk primarily driven by {parts[0]} and {parts[1]}. Urgent precautionary measures are recommended."
     elif risk_level == "Medium":
-        return f"Moderate risk detected, primarily influenced by {parts[0]}. Stay alert for weather updates."
+        return f"Moderate risk detected. Key factors include {parts[0]}. Monitoring of localized weather updates is advised."
     else:
-        return f"Low hazard risk. Major factors like {parts[0]} are currently within safe limits."
+        return f"Low hazard risk. Safety indicators for {parts[0]} are currently stable and well within normal limits."
 
 
 def get_feature_importance(ensemble, feature_names):
