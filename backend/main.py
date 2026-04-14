@@ -128,6 +128,7 @@ class FetchDataRequest(BaseModel):
 async def health():
     return {
         "status": "ok", 
+        "city_count": len(INDIAN_CITIES),
         "model_ready": state["model"] is not None,
         "error": state["training_error"]
     }

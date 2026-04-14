@@ -8,3 +8,5 @@ joblib
 python-multipart
 pydantic
 requests
+geopy
+python-dotenv
